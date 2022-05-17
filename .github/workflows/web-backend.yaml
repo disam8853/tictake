@@ -2,7 +2,7 @@ name: CI for web-backend
 on:
   push:
     paths:
-      - "/web-backend/**"
+      - web-backend/**
 
 env:
   REGISTRY: ghcr.io
