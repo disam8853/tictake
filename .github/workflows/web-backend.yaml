@@ -1,4 +1,4 @@
-name: GitHub Actions for web-backend
+name: CI for web-backend
 on: [push]
 
 env:
