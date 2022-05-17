@@ -1,5 +1,8 @@
 name: CI for web-backend
-on: [push]
+on:
+  push:
+    paths:
+      - "/web-backend/**"
 
 env:
   REGISTRY: ghcr.io
