@@ -7,3 +7,8 @@ configMapGenerator:
   - name: web-backend-config
     envs:
       - config/env.properties
+
+secretGenerator:
+  - name: web-backend-secret
+    envs:
+      - config/secret.properties
