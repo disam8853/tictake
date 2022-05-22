@@ -1,12 +1,12 @@
-name: CI for user-activity-service
+name: CI for user-activity-api
 on:
   push:
     paths:
-      - user-activity-service/**
+      - user-activity-api/**
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/user-activity-service
+  IMAGE_NAME: ${{ github.repository }}/user-activity-api
 
 jobs:
   build-and-push-image:
@@ -35,7 +35,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
-          context: ./user-activity-service
+          context: ./user-activity-api
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
