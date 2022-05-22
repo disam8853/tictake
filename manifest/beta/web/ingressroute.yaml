@@ -9,16 +9,16 @@ spec:
   tls:
     secretName: tictake-tls
   routes:
-    - match: HOST(`tictake.disam.dizatt.com`) && PathPrefix(`/`)
+    - match: HOST(`tictake.disam.dizatt.com`) && PathPrefix(`/api`)
       kind: Rule
       services:
         - name: tictake-web-backend
           port: 8080
-    # - match: Host(`sample-beta.csie.org`)
-    #   kind: Rule
-    #   services:
-    #     - name: tictake-web-client
-    #       port: 80
+    - match: Host(`tictake.disam.dizatt.com`)
+      kind: Rule
+      services:
+        - name: tictake-web-frontend
+          port: 80
 
 ---
 apiVersion: cert-manager.io/v1
