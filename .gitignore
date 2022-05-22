@@ -3,5 +3,5 @@
 node_modules
 .env
 
-user-activity-service/venv
+venv
 __pycache__
