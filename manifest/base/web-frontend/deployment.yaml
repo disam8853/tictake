@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: web-frontend
-          image: ghcr.io/disam8853/tictake/web-frontend:main
+          image: ghcr.io/disam8853/tictake/web-frontend:latest
           ports:
             - containerPort: 80
               name: http

@@ -1,0 +1,26 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tictake-api-user-activity
+  labels:
+    app: api-user-activity
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-user-activity
+  template:
+    metadata:
+      labels:
+        app: api-user-activity
+    spec:
+      containers:
+        - name: api-user-activity
+          image: ghcr.io/disam8853/tictake/user-activity-api:latest
+          ports:
+            - containerPort: 5000
+              name: http
+          envFrom:
+            - configMapRef:
+                name: api-user-activity-config

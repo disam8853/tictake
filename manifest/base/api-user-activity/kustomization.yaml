@@ -1,0 +1,4 @@
+namespace: tictake
+resources:
+  - deployment.yaml
+  - service.yaml

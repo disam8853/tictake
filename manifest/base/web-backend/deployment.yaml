@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: web-backend
-          image: ghcr.io/disam8853/tictake/web-backend:main
+          image: ghcr.io/disam8853/tictake/web-backend:latest
           ports:
             - containerPort: 8080
               name: http
