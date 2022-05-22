@@ -7,7 +7,10 @@ const activityRouter = require('./route/activity')
 const orderRouter = require('./route/order')
 const ticketRouter = require('./route/ticket')
 
-const USER_ACTIVITY_API = 'https://api-user-actibity.disam.dizatt.com'
+const USER_ACTIVITY_API = process.env.USER_ACTIVITY_API
+if (!USER_ACTIVITY_API) {
+  throw new Error('env not defined')
+}
 
 app.post('/api/signup', async (req, res) => {
   const userInfo = req.body
