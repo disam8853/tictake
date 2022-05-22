@@ -1,12 +1,12 @@
 from crypt import methods
+from environs import Env
 from flask import Flask, make_response
 from flask_sqlalchemy import SQLAlchemy
 
-import config
-
+env = Env()
+env.read_env()
 db = SQLAlchemy()
 app = Flask(__name__)
-app.config.from_object(config)
  
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://user_name:password@IP:3306/db_name"
@@ -102,15 +102,16 @@ def create_activity():
                 "start_date": "yyyy-mm-ddThh:mm:ssZ",
                 "end_date": "yyyy-mm-ddThh:mm:ssZ",
                 "total_inventory": "integer",
+                "remaining_inventory": "integer",
                 "activity_info": "string"
             }
         error
             status code 500
 
 """
-@app.route('/api/v1/activity/:activity_id', methods=['GET'])
-def create_activity():
-    return
+# @app.route('/api/v1/activity/:activity_id', methods=['GET'])
+# def create_activity():
+#     return
 
 
 
@@ -137,12 +138,12 @@ def create_activity():
             status code 500
 
 """
-@app.route('/api/v1/activity', methods=['POST'])
-def create_activity():
+# @app.route('/api/v1/activity', methods=['POST'])
+# def create_activity():
    
 
 
-    return
+#     return
 
 
 # create user, login, create activity

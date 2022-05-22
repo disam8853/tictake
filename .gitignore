@@ -3,6 +3,5 @@
 node_modules
 .env
 
-user-activity-service/venv
-user-activity-service/config
+venv
 __pycache__

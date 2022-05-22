@@ -1,9 +1,16 @@
 click==8.0.4
 dataclasses==0.8
-flask==2.0.3
+environs==9.5.0
+Flask==2.0.3
+Flask-SQLAlchemy==2.5.1
+greenlet==1.1.2
 importlib-metadata==4.8.3
 itsdangerous==2.0.1
 Jinja2==3.0.3
 MarkupSafe==2.0.1
+marshmallow==3.14.1
+PyMySQL==1.0.2
+python-dotenv==0.20.0
+SQLAlchemy==1.4.36
 Werkzeug==2.0.3
 zipp==3.6.0
