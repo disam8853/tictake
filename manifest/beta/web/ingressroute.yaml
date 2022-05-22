@@ -1,0 +1,35 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: tictake-web
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    secretName: tictake-tls
+  routes:
+    - match: HOST(`tictake.disam.dizatt.com`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: tictake-web-backend
+          port: 8080
+    # - match: Host(`sample-beta.csie.org`)
+    #   kind: Rule
+    #   services:
+    #     - name: tictake-web-client
+    #       port: 80
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: tictake-tls
+spec:
+  dnsNames:
+    - tictake.disam.dizatt.com
+  secretName: tictake-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+    group: cert-manager.io

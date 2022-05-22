@@ -1,0 +1,10 @@
+resources:
+  - ../../base/web-backend
+  - ingressroute.yaml
+
+configMapGenerator:
+  - name: web-backend-config
+    envs:
+      - config/env.properties
+# apiVersion: kustomize.config.k8s.io/v1beta1
+# kind: Kustomization
