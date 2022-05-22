@@ -1,0 +1,9 @@
+.env
+.nyc_coverage
+.nyc_output
+.pytest_cache
+__py_cache__
+node_modules
+test
+testcase
+venv
