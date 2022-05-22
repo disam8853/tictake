@@ -1,11 +1,14 @@
 const express = require('express')
 const axios = require('axios')
+const morgan = require('morgan')
 const app = express()
 app.use(express.json())
 const port = process.env.PORT || 8080
 const activityRouter = require('./route/activity')
 const orderRouter = require('./route/order')
 const ticketRouter = require('./route/ticket')
+
+app.use(morgan('dev'))
 
 const USER_ACTIVITY_API = process.env.USER_ACTIVITY_API
 if (!USER_ACTIVITY_API) {
@@ -16,7 +19,7 @@ app.post('/api/signup', async (req, res) => {
   const userInfo = req.body
   try {
     const signupRes = await axios.post(`${USER_ACTIVITY_API}/users`, userInfo)
-    res.send(signupRes)
+    res.send(signupRes.body)
   } catch (err) {
     res.status(400).send('signup failed!')
   }
@@ -33,5 +36,5 @@ app.use('/api/orders', orderRouter)
 app.use('/api/tickets', ticketRouter)
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`TicTake app listening on port ${port}`)
 })
