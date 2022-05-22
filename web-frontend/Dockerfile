@@ -1,6 +1,6 @@
-FROM node:16-alpine
+FROM node:16-alpine  AS builder
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY . .
 RUN yarn install --prod && yarn build
