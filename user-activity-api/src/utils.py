@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 def gmt_to_utc8(time_str):
     time_format = "%Y-%m-%d %H:%M:%S"
     now = datetime.strptime(str(time_str), time_format)

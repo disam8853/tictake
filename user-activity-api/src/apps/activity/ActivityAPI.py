@@ -1,125 +1,9 @@
-from crypt import methods
-from datetime import datetime, timezone
-import pytz
-from environs import Env
-from flask import Flask, make_response, jsonify, Response, request
-from flask_sqlalchemy import SQLAlchemy
+from flask import Blueprint, jsonify, Response
 
+from models.models import Activity
+from utils import utc8_to_gmt, gmt_to_utc8 
 
-env = Env()
-env.read_env()
-app = Flask(__name__)
-
-db = SQLAlchemy(app)
-
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = env("DATABASE_URI")
-app.config['SQLALCHEMY_ECHO'] = True
-app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-    "pool_pre_ping": True,
-    "pool_recycle": 300,
-    'pool_timeout': 900,
-    'pool_size': 10,
-    'max_overflow': 5,
-}
-
-def gmt_to_utc8(time_str):
-    time_format = "%Y-%m-%d %H:%M:%S"
-    now = datetime.strptime(str(time_str), time_format)
-    now_utc = now.replace(tzinfo=timezone.utc)
-    now_local = now_utc.astimezone()
-
-    return str(now_local)
-
-def utc8_to_gmt(time_str):
-    time_format = "%Y-%m-%d %H:%M:%S"
-    old_dt = datetime.strptime(str(time_str), time_format)
-    dt = pytz.timezone("Asia/Taipei").localize(old_dt)
-    utc_dt = pytz.utc.normalize(dt.astimezone(pytz.utc))
-
-    return utc_dt
-
-class User(db.Model):
-    __tablename__ = 'user'
-    user_id = db.Column(db.Integer, primary_key=True, nullable=False)
-    first_name = db.Column(db.String(20), nullable=False)
-    last_name = db.Column(db.String(20))
-    email = db.Column(db.String(40), nullable=False)
-    password = db.Column(db.String(64), nullable=False)
-class Activity(db.Model):
-    __tablename__ = 'activity'
-    activity_id = db.Column(db.Integer, primary_key=True, nullable=False)
-    activity_name = db.Column(db.String(30), nullable=False)
-    start_date = db.Column(db.DateTime, nullable=False)
-    end_date = db.Column(db.DateTime, nullable=False)
-    total_inventory = db.Column(db.Integer, nullable=False)
-    remaining_inventory = db.Column(db.Integer, nullable=False)
-    activity_info = db.Column(db.String(300), nullable=False)
-    created_time = db.Column(db.DateTime, default=datetime.utcnow(), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
-
-@app.route('/api/v1/user', methods=['GET'])
-def test():
-    user = User.query.filter_by(user_id = 1).first()
-    resp = jsonify(user_id=user.user_id)
-    return resp
-
-
-"""
-    User login
-    @request
-    {
-        "email": "string",
-        "password": "string"
-    }
-    @response
-        success
-            status code 200
-        error
-            status code 500
-"""
-@app.route('/api/v1/user/login', methods=['POST'])
-def login():
-    # sql_cmd = """
-    #     select *
-    #     from product
-    #     """
-
-    # query_data = db.engine.execute(sql_cmd)
-    # print(query_data)
-    headers = {"Content-Type": "application/json"}
-    return make_response(
-        'Test worked!',
-        200,
-        headers=headers
-    )
-
-
-
-"""
-    Create user
-    @request
-    {
-        "first_name": "string",
-        "last_name": "string",
-        "email": "string",
-        "password": "string" // store in sha256
-    }
-    @response
-        success
-            status code 200
-        error
-            status code 500
-"""
-@app.route('/api/v1/user/create', methods=['POST'])
-def create_user():
-    user = User(first_name = 'peter', email = 'peter@p.p', password = 'password')
-    db.session.add(user)
-    db.session.commit()
-    return Response(status=200)
-
-
-
+activity_api = Blueprint('ActivityAPI', __name__)
 
 """
     List all activities, including on going and finished activities.
@@ -141,7 +25,7 @@ def create_user():
             status code 500
 
 """
-@app.route('/api/v1/activity', methods=['GET'])
+@activity_api.route('/', methods=['GET'])
 def get_activities():
     activities = Activity.query.all()
     activity_list = []
@@ -182,7 +66,7 @@ def get_activities():
             status code 500
 
 """
-@app.route('/api/v1/activity/<activity_id>', methods=['GET'])
+@activity_api.route('/<activity_id>', methods=['GET'])
 def get_activity(activity_id):
     activity = Activity.query.filter_by(activity_id = activity_id).first()
     resp = jsonify(
@@ -221,7 +105,7 @@ def get_activity(activity_id):
             status code 500
 
 """
-@app.route('/api/v1/activity', methods=['POST'])
+@activity_api.route('/', methods=['POST'])
 def create_activity():
     try:
         data = request.get_json()
@@ -245,8 +129,3 @@ def create_activity():
         print(e)
         return Response(status=500)
     return Response(status=500)
-
-
-# create user, login, create activity
-if __name__ == '__main__':
-    app.run()
