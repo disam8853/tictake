@@ -1,6 +1,5 @@
 from crypt import methods
 from models.models import db
-import pytz
 from environs import Env
 from flask import Flask
 
