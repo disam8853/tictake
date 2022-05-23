@@ -24,3 +24,5 @@ spec:
           envFrom:
             - configMapRef:
                 name: web-backend-config
+            - secretRef:
+                name: web-backend-secret
