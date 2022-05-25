@@ -1,2 +1,7 @@
 https://googleapis.dev/python/google-api-core/latest/auth.html
 gcloud auth application-default login
+
+export GOOGLE_APPLICATION_CREDENTIALS="./tictake-303073cdcbf0.json"
+
+set GOOGLE_APPLICATION_CREDENTIALS=C:\Users\GOOD\Desktop\碩班\110-2\分散式\tictake\ticket-api\tictake-303073cdcbf0.json
+$env:GOOGLE_APPLICATION_CREDENTIALS="C:\Users\GOOD\Desktop\碩班\110-2\分散式\tictake\ticket-api\tictake-303073cdcbf0.json"

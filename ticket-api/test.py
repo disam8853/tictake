@@ -16,15 +16,16 @@ def main(project_id="project-id", instance_id="instance-id", table_id="test"):
 
     # Open an existing table.
     table = instance.table(table_id)
+    print("Bigtable connecting test finished.")
 
-    row_key = "r1"
-    row = table.read_row(row_key.encode("utf-8"))
+    # row_key = "r1"
+    # row = table.read_row(row_key.encode("utf-8"))
 
-    column_family_id = "cf1"
-    column_id = "c1".encode("utf-8")
-    value = row.cells[column_family_id][column_id][0].value.decode("utf-8")
+    # column_family_id = "cf1"
+    # column_id = "c1".encode("utf-8")
+    # value = row.cells[column_family_id][column_id][0].value.decode("utf-8")
 
-    print("Row key: {}\nData: {}".format(row_key, value))
+    # print("Row key: {}\nData: {}".format(row_key, value))
 
 
 if __name__ == "__main__":

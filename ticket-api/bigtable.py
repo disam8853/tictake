@@ -2,19 +2,22 @@ import datetime
 from google.cloud import bigtable
 from google.cloud.bigtable import column_family
 from google.cloud.bigtable import row_filters
+from google.oauth2 import service_account
 
-client = bigtable.Client(project="tictake", admin=True)
+
+credentials = service_account.Credentials. from_service_account_file('tictake-303073cdcbf0.json')
+client = bigtable.Client(project="tictake", admin=True, credentials=credentials)
 instance = client.instance("instance-tictake")
 
 # bigtable
 def create_table(table_id):
     print("Creating the {} table.".format(table_id))
     table = instance.table(table_id)
-    print("Creating column family cf1 with Max Version GC rule...")
+    print("Creating column family activity with Max Version GC rule...")
     # Create a column family with GC policy : most recent N versions
-    # Define the GC policy to retain only the most recent 2 versions
-    max_versions_rule = column_family.MaxVersionsGCRule(2)
-    column_family_id = "cf1"
+    # Define the GC policy to retain only the most recent 3 versions
+    max_versions_rule = column_family.MaxVersionsGCRule(3)
+    column_family_id = "activity"
     column_families = {column_family_id: max_versions_rule}
     if not table.exists():
         table.create(column_families=column_families)
