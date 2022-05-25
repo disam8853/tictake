@@ -1,0 +1,2 @@
+export GOOGLE_APPLICATION_CREDENTIALS="./tictake-303073cdcbf0.json"
+$env:GOOGLE_APPLICATION_CREDENTIALS="./tictake-303073cdcbf0.json"
