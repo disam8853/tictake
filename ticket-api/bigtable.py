@@ -5,11 +5,15 @@ from google.cloud.bigtable import row_filters
 from google.oauth2 import service_account
 
 
-credentials = service_account.Credentials. from_service_account_file('tictake-303073cdcbf0.json')
-client = bigtable.Client(project="tictake", admin=True, credentials=credentials)
+credentials = service_account.Credentials. from_service_account_file(
+    'tictake-303073cdcbf0.json')
+client = bigtable.Client(project="tictake", admin=True,
+                         credentials=credentials)
 instance = client.instance("instance-tictake")
 
 # bigtable
+
+
 def create_table(table_id):
     print("Creating the {} table.".format(table_id))
     table = instance.table(table_id)
@@ -25,17 +29,47 @@ def create_table(table_id):
         print("Table {} already exists.".format(table_id))
 
 
-def create_row(table_id, column_family_id):
+def create_order(
+        member,
+        activity_id,
+        has_paid,
+        order_timestamp,
+        table_id="tictake",
+        column_family_id="activity"):
     table = instance.table(table_id)
-    print("Writing some greetings to the table.")
-    greetings = ["Hello World!", "Hello Cloud Bigtable!", "Hello Python!"]
-    rows = []
-    column = "greeting".encode()
-    for i, value in enumerate(greetings):
-        row_key = "greeting{}".format(i).encode()
-        row = table.direct_row(row_key)
-        row.set_cell(
-            column_family_id, column, value, timestamp=datetime.datetime.utcnow()
-        )
-        rows.append(row)
-    table.mutate_rows(rows)
+    # print("Writing some greetings to the table.")
+    # greetings = ["Hello World!", "Hello Cloud Bigtable!", "Hello Python!"]
+    # rows = []
+    # for i, value in enumerate(greetings):
+    row_key = "{}#{}#{}".format(member, activity_id, order_timestamp).encode()
+    row = table.direct_row(row_key)
+    dt = datetime.datetime.now()
+    row.set_cell(column_family_id, "member".encode(), member,
+                 timestamp=datetime.datetime.utcnow())
+    row.set_cell(column_family_id, "has_paid".encode(),
+                 has_paid, timestamp=datetime.datetime.utcnow())
+    row.set_cell(column_family_id, "order_timestamp".encode(),
+                 order_timestamp, timestamp=datetime.datetime.utcnow())
+    # rows.append(row)
+    table.mutate_rows(row)
+    # table.mutate_rows(rows)
+
+
+def order_has_paid(
+        member,
+        activity_id,
+        has_paid,
+        order_timestamp,
+        table_id="tictake",
+        column_family_id="activity"):
+    pass
+
+
+def get_order(
+        member,
+        activity_id,
+        has_paid,
+        order_timestamp,
+        table_id="tictake",
+        column_family_id="activity"):
+    pass
