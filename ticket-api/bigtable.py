@@ -29,6 +29,12 @@ def create_table(table_id):
         print("Table {} already exists.".format(table_id))
 
 
+def delete_table(table_id):
+    table = instance.table(table_id)
+    print("Deleting the {} table.".format(table_id))
+    table.delete()
+
+
 def create_order(
         member,
         activity_id,
@@ -98,37 +104,33 @@ def get_order_by_filter(
         column_family_id="activity"):
 
     table = instance.table(table_id)
-    # key = ""
-    # if member is not None:
-    #     key += member+"#"
-    # if activity_id is not None:
-    #     key += activity_id+"#"
+    # make regex
+    key = ""
+    if member is not None:
+        key += "^"+member+"#"
+    else:
+        key += ".*#"
+        
+    if activity_id is not None:
+        key += activity_id+"#"
+    key+=".*"
 
-    # row_filter = row_filters.RowKeyRegexFilter(key.encode())
-    # row_filter = row_filters.RowKeyRegexFilter(b"(Laura#1#)")
-    row_filter = row_filters.CellsColumnLimitFilter(1)
+    # filter data
+    row_filter = row_filters.RowKeyRegexFilter(key.encode())
     partial_rows = table.read_rows(filter_=row_filter)
-    print("rows:", partial_rows, file=sys.stderr)
-
-    rows=[]
+    rows = []
     for row in partial_rows:
-        print("row:", row.cells, file=sys.stderr)
-
         member_cell = row.cells[column_family_id][b"member"][0]
         activity_id_cell = row.cells[column_family_id][b"activity_id"][0]
         has_paid_cell = row.cells[column_family_id][b"has_paid"][0]
         order_timestamp_cell = row.cells[column_family_id][b"order_timestamp"][0]
-        row={}
-        row["member"] = member_cell.value.decode("utf-8")
-        row["activity_id"] = activity_id_cell.value.decode("utf-8")
-        row["has_paid"] = has_paid_cell.value.decode("utf-8")
-        row["order_timestamp"] = utils.gmt_to_utc8(order_timestamp_cell.value.decode("utf-8"))
-        rows.append(row)
+        # add row to response
+        add_row = {}
+        add_row["member"] = member_cell.value.decode("utf-8")
+        add_row["activity_id"] = activity_id_cell.value.decode("utf-8")
+        add_row["has_paid"] = has_paid_cell.value.decode("utf-8")
+        add_row["order_timestamp"] = utils.gmt_to_utc8(
+            order_timestamp_cell.value.decode("utf-8"))
+        rows.append(add_row)
 
     return jsonify(rows)
-    # return jsonify(key=key)
-
-    # return jsonify(member=member_cell.value.decode("utf-8"),
-    #                    activity_id=activity_id_cell.value.decode("utf-8"),
-    #                    has_paid=has_paid_cell.value.decode("utf-8"),
-    #                    order_timestamp=utils.gmt_to_utc8(order_timestamp_cell.value.decode("utf-8")))
