@@ -5,13 +5,13 @@ from google.cloud import bigtable
 from google.cloud.bigtable import column_family
 from google.cloud.bigtable import row_filters
 from google.oauth2 import service_account
+import sys
 
 credentials = service_account.Credentials.from_service_account_file(
     'tictake-303073cdcbf0.json')
 client = bigtable.Client(project="tictake", admin=True,
                          credentials=credentials)
 instance = client.instance("instance-tictake")
-# set GOOGLE_APPLICATION_CREDENTIALS=C:\Users\GOOD\Desktop\碩班\110-2\分散式\tictake\ticket-api\tictake-303073cdcbf0.json
 
 
 def create_table(table_id):
@@ -47,7 +47,7 @@ def create_order(
     row.set_cell(column_family_id, "member".encode(), member,
                  timestamp=utc_datetime)
     row.set_cell(column_family_id, "has_paid".encode(),
-                 0, timestamp=utc_datetime)
+                 "0", timestamp=utc_datetime)
     row.set_cell(column_family_id, "order_timestamp".encode(),
                  str(order_timestamp).encode(), timestamp=utc_datetime)
     rows.append(row)
@@ -58,31 +58,9 @@ def create_order(
     else:
         return row_key
 
-    # row_keys = [
-    #     b"row_key_1",
-    #     b"row_key_2",
-    # ]
-    # col_name = b"test"
-    # rows = []
-    # for i, row_key in enumerate(row_keys):
-    #     value = "value_{}".format(i).encode()
-    #     row = table.row(row_key)
-    #     row.set_cell(
-    #         column_family_id, col_name, value, timestamp=datetime.datetime.utcnow()
-    #     )
-    #     rows.append(row)
-    # response = table.mutate_rows(rows)
-    # # validate that all rows written successfully
-    # for i, status in enumerate(response):
-    #     if status.code != 0:
-    #         print("Row number {} failed to write".format(i))
-
 
 def order_has_paid(
-        member,
-        activity_id,
-        has_paid,
-        order_timestamp,
+        key,
         table_id="tictake",
         column_family_id="activity"):
     pass
@@ -94,7 +72,6 @@ def get_order_by_key(
         column_family_id="activity"):
 
     table = instance.table(table_id)
-    print("Getting a single row by row key.")
     row_filter = row_filters.CellsColumnLimitFilter(1)
     row = table.read_row(key.encode(), row_filter)
 
@@ -108,31 +85,50 @@ def get_order_by_key(
 
         return jsonify(member=member_cell.value.decode("utf-8"),
                        activity_id=activity_id_cell.value.decode("utf-8"),
-                       has_paid=has_paid_cell.value,
+                       has_paid=has_paid_cell.value.decode("utf-8"),
                        order_timestamp=utils.gmt_to_utc8(order_timestamp_cell.value.decode("utf-8")))
     else:
         return jsonify(msg="fail")
 
 
 def get_order_by_filter(
-        member="",
-        activity_id="",
+        member,
+        activity_id,
         table_id="tictake",
         column_family_id="activity"):
 
     table = instance.table(table_id)
-    print("Getting a single greeting by row key.")
-    key = "{}#{}#{}".format(member, activity_id, order_timestamp).encode()
+    # key = ""
+    # if member is not None:
+    #     key += member+"#"
+    # if activity_id is not None:
+    #     key += activity_id+"#"
+
+    # row_filter = row_filters.RowKeyRegexFilter(key.encode())
+    # row_filter = row_filters.RowKeyRegexFilter(b"(Laura#1#)")
     row_filter = row_filters.CellsColumnLimitFilter(1)
-    row = table.read_row(key, row_filter)
+    partial_rows = table.read_rows(filter_=row_filter)
+    print("rows:", partial_rows, file=sys.stderr)
 
-    member_cell = row.cells[column_family_id]["member".encode()][0]
-    activity_id_cell = row.cells[column_family_id]["activity_id".encode()][0]
-    has_paid_cell = row.cells[column_family_id]["has_paid".encode()][0]
-    order_timestamp_cell = row.cells[column_family_id][
-        "order_timestamp".encode()][0]
+    rows=[]
+    for row in partial_rows:
+        print("row:", row.cells, file=sys.stderr)
 
-    return jsonify(member=member_cell.value.decode("utf-8"),
-                   activity_id=activity_id_cell.value.decode("utf-8"),
-                   has_paid=has_paid_cell.value,
-                   order_timestamp=utils.gmt_to_utc8(order_timestamp_cell.value.decode("utf-8")))
+        member_cell = row.cells[column_family_id][b"member"][0]
+        activity_id_cell = row.cells[column_family_id][b"activity_id"][0]
+        has_paid_cell = row.cells[column_family_id][b"has_paid"][0]
+        order_timestamp_cell = row.cells[column_family_id][b"order_timestamp"][0]
+        row={}
+        row["member"] = member_cell.value.decode("utf-8")
+        row["activity_id"] = activity_id_cell.value.decode("utf-8")
+        row["has_paid"] = has_paid_cell.value.decode("utf-8")
+        row["order_timestamp"] = utils.gmt_to_utc8(order_timestamp_cell.value.decode("utf-8"))
+        rows.append(row)
+
+    return jsonify(rows)
+    # return jsonify(key=key)
+
+    # return jsonify(member=member_cell.value.decode("utf-8"),
+    #                    activity_id=activity_id_cell.value.decode("utf-8"),
+    #                    has_paid=has_paid_cell.value.decode("utf-8"),
+    #                    order_timestamp=utils.gmt_to_utc8(order_timestamp_cell.value.decode("utf-8")))
