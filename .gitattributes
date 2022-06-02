@@ -1,1 +1,2 @@
 secret.properties filter=git-crypt diff=git-crypt
+google-credential.json filter=git-crypt diff=git-crypt

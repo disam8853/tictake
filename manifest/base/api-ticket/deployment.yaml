@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tictake-api-ticket
+  labels:
+    app: api-ticket
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-ticket
+  template:
+    metadata:
+      labels:
+        app: api-ticket
+    spec:
+      containers:
+        - name: api-ticket
+          image: ghcr.io/disam8853/tictake/ticket-api:latest
+          ports:
+            - containerPort: 5000
+              name: http
+          volumeMounts:
+            - name: bigtable-credential
+              mountPath: /server/tictake-352113-f099decf2768.json
+              subPath: tictake-352113-f099decf2768.json
+              readOnly: true
+          envFrom:
+            - configMapRef:
+                name: api-ticket-config
+      volumes:
+        - name: bigtable-credential
+          secret:
+            secretName: bigtable-credential
+            items:
+              - key: google-credential.json
+                path: tictake-352113-f099decf2768.json

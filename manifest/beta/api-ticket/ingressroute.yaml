@@ -1,0 +1,30 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: tictake-api-ticket
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    secretName: api-ticket-tls
+  routes:
+    - match: HOST(`api-ticket.disam.dizatt.com`)
+      kind: Rule
+      services:
+        - name: api-ticket
+          port: 5000
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: api-ticket-tls
+spec:
+  dnsNames:
+    - api-ticket.disam.dizatt.com
+  secretName: api-ticket-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+    group: cert-manager.io
