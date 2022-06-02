@@ -6,3 +6,8 @@ configMapGenerator:
   - name: api-user-activity-config
     envs:
       - config/env.properties
+
+secretGenerator:
+  - name: api-user-activity-secret
+    envs:
+      - config/secret.properties
