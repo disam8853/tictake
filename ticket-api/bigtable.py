@@ -15,9 +15,7 @@ instance = client.instance("instance-tictake")
 
 
 def create_table(table_id):
-    print("Creating the {} table.".format(table_id))
     table = instance.table(table_id)
-    print("Creating column family activity with Max Version GC rule...")
     # Create a column family with GC policy : most recent N versions
     # Define the GC policy to retain only the most recent 3 versions
     max_versions_rule = column_family.MaxVersionsGCRule(3)
@@ -41,12 +39,13 @@ def create_order(
         order_timestamp,
         table_id="tictake",
         column_family_id="activity"):
+
     table = instance.table(table_id)
-    print("Got table.")
     rows = []
     timestamp = utils.utc_to_str(order_timestamp)
     row_key = "{}#{}#{}".format(member, activity_id, timestamp)
     row = table.direct_row(row_key.encode())
+
     utc_datetime = datetime.datetime.utcnow()
     row.set_cell(column_family_id, "activity_id".encode(), activity_id,
                  timestamp=utc_datetime)
@@ -58,7 +57,7 @@ def create_order(
                  str(order_timestamp).encode(), timestamp=utc_datetime)
     rows.append(row)
     res = table.mutate_rows(rows)
-    print(res)
+
     if res[0] is None:
         return ""
     else:

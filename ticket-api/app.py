@@ -51,9 +51,9 @@ def add_ticket_order():
 
 
 """
-    Update ticket order
+    Update ticket order [PUT]
     @request
-        url: <BASE_URL>/get_ticket/<key>
+        url: <BASE_URL>/ticket/<key>
         key:member#activity_id#order_timestamp(yyyymmddhhmmss)
 
     @response
