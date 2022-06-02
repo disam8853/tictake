@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route('/test_api/', methods=['GET'])
 def test_api():
-    bigtable.delete_table("tictake")
+    # bigtable.delete_table("tictake")
     bigtable.create_table("tictake")
     return jsonify(message='Create table successfully')
 
@@ -72,12 +72,13 @@ def update_ticket_order(key):
         key = unquote(key)
         if key != "":
             res = bigtable.order_has_paid(key)
-            return res
+            return jsonify(msg=f"Order {key} was paid successfully")
         else:
             return Response(status=500)
     except Exception as e:
         print(e)
         return Response(status=500)
+    return Response(status=500)
 
 
 """

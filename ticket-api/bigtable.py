@@ -8,8 +8,8 @@ from google.oauth2 import service_account
 import sys
 
 credentials = service_account.Credentials.from_service_account_file(
-    'tictake-303073cdcbf0.json')
-client = bigtable.Client(project="tictake", admin=True,
+    'tictake-352113-f099decf2768.json')
+client = bigtable.Client(project="tictake-352113", admin=True,
                          credentials=credentials)
 instance = client.instance("instance-tictake")
 
@@ -69,7 +69,18 @@ def order_has_paid(
         key,
         table_id="tictake",
         column_family_id="activity"):
-    pass
+    
+    table = instance.table(table_id)
+    row = table.row(key)
+
+    if row is not None:
+        utc_datetime = datetime.datetime.utcnow()
+        row.set_cell(column_family_id, "has_paid".encode(),
+                 "1", timestamp=utc_datetime)
+        row.commit()
+        return key
+    else:
+        return ""
 
 
 def get_order_by_key(
