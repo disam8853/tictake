@@ -53,10 +53,12 @@ def add_ticket_order():
 
 
 """
-    Update ticket order [PUT]
+    Create ticket order by key
     @request
-        url: <BASE_URL>/ticket/<key>
-        key:member#activity_id#order_timestamp(yyyymmddhhmmss)
+    {
+        "key":"member#activity_id#yyyymmddhhmmss"
+    }
+    # Please provide the timestamp in GMT format
 
     @response
         success
