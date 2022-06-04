@@ -33,6 +33,8 @@ def test_api():
             status code 500
 
 """
+
+
 @app.route('/add_ticket_order/', methods=['POST'])
 def add_ticket_order():
     try:
@@ -47,6 +49,36 @@ def add_ticket_order():
             return Response(status=500)
     except Exception as e:
         print(e)
+        return Response(status=500)
+
+
+"""
+    Update ticket order [PUT]
+    @request
+        url: <BASE_URL>/ticket/<key>
+        key:member#activity_id#order_timestamp(yyyymmddhhmmss)
+
+    @response
+        success
+            status code 200
+            {
+                "msg": "string"
+            }
+        error
+            status code 500
+
+"""
+@app.route('/ticket/', methods=['POST'])
+def add_ticket_by_key():
+    data = request.get_json()
+    keys = data['key'].split('#')
+    if len(keys) == 3 and len(keys[0]) > 0 and len(keys[1]) > 0 and len(keys[2]) == 14:
+        key = bigtable.create_order(keys[0], keys[1], utils.str_to_gmt(keys[2]))
+        if key != "":
+            return jsonify(msg=f"create order: {key} successfully")
+        else:
+            return Response(status=500)
+    else:
         return Response(status=500)
 
 
