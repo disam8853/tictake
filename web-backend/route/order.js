@@ -2,7 +2,9 @@ const express = require('express')
 const axios = require('axios')
 const dayjs = require('dayjs')
 const utc = require('dayjs/plugin/utc')
+const timezone = require('dayjs/plugin/timezone')
 dayjs.extend(utc)
+dayjs.extend(timezone)
 const userMiddle = require('./../user-middleware')
 const router = express.Router()
 const Redis = require('ioredis')
@@ -10,16 +12,18 @@ const { v4: uuidv4 } = require('uuid')
 
 const TICKET_API = process.env.TICKET_API
 const REDIS_EXPIRE_TIME_IN_SECONDS = process.env.REDIS_EXPIRE_TIME_IN_SECONDS
+const TIMEZONE = process.env.TIMEZONE
 const redis = new Redis({
   port: process.env.REDIS_PORT || 6379,
   host: process.env.REDIS_HOST || '127.0.0.1',
 })
 
+console.log(dayjs().tz(TIMEZONE).format('YYYY-MM-DD HH:mm:ss'))
 router.use(userMiddle)
 
 router.post('/', async (req, res) => {
   // activity id, user
-  const now = dayjs()
+  const now = dayjs().tz(TIMEZONE)
   const email = req.user.email
   const activityId = req.body.activity_id
   const ts = now.utc().format('YYYYMMDDHHmmss')
