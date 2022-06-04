@@ -12,14 +12,11 @@ const { v4: uuidv4 } = require('uuid')
 
 const TICKET_API = process.env.TICKET_API
 const REDIS_EXPIRE_TIME_IN_SECONDS = process.env.REDIS_EXPIRE_TIME_IN_SECONDS
-const TIMEZONE = process.env.TIMEZONE
 const redis = new Redis({
   port: process.env.REDIS_PORT || 6379,
   host: process.env.REDIS_HOST || '127.0.0.1',
 })
 
-dayjs.tz.setDefault(TIMEZONE)
-console.log(dayjs.tz().format('YYYY-MM-DD HH:mm:ss'))
 router.use(userMiddle)
 
 router.post('/', async (req, res) => {
