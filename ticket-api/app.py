@@ -44,7 +44,7 @@ def add_ticket_order():
         order_timestamp = utils.utc8_to_gmt(data['order_timestamp'])
         key = bigtable.create_order(member, activity_id, order_timestamp)
         if key != "":
-            return jsonify(msg=f"create order: {key} successfully")
+            return jsonify(msg=f"create order: {key} successfully", key=key)
         else:
             return Response(status=500)
     except Exception as e:

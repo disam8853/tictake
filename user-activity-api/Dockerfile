@@ -5,7 +5,13 @@ COPY . /app
 
 RUN pip install -r requirements.txt
 
+# development
+ENV FLASK_ENV=development 
+ENV FLASK_DEBUG=1
+# development end
+ENV FLASK_APP=src/app.py
+ENV FLASK_RUN_HOST=0.0.0.0
+
 EXPOSE 5000
 
-ENTRYPOINT [ "python" ]
-CMD [ "src/app.py" ]
+CMD ["flask", "run"]

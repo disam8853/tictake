@@ -10,5 +10,8 @@ spec:
     - name: http
       port: 8080
       targetPort: 8080
+    - name: redis
+      port: 6379
+      targetPort: 6379
   selector:
     app: web-backend

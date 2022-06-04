@@ -24,3 +24,5 @@ spec:
           envFrom:
             - configMapRef:
                 name: api-user-activity-config
+            - secretRef:
+                name: api-user-activity-secret
