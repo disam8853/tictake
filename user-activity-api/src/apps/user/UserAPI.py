@@ -25,7 +25,7 @@ def login():
         password = request.json.get('password')
         user = User.query.filter_by(email = email).first()
         if not user or not user.verify_password(password):
-            return abort(401)
+            return Response(status=401)
         else:
             return Response(status=200)
     except Exception as e:
@@ -51,14 +51,14 @@ def login():
 """
 @user_api.route('/create', methods=['POST'])
 def create_user():
-    try: 
-        first_name = request.json.get('first_name')
-        last_name = request.json.get('last_name')
-        email = request.json.get('email')
-        password = request.json.get('password')
-        if User.query.filter_by(email=email).first() is not None:
-            abort(400)
+    first_name = request.json.get('first_name')
+    last_name = request.json.get('last_name')
+    email = request.json.get('email')
+    password = request.json.get('password')
 
+    if User.query.filter_by(email=email).first() is not None:
+        abort(400)
+    else:
         user = User(
             first_name = first_name,
             email = email,
@@ -73,6 +73,3 @@ def create_user():
         db.session.add(user)
         db.session.commit()
         return Response(status=200)
-    except Exception as e:
-        print(e)
-        return Response(status=500)
