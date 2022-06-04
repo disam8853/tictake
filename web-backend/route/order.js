@@ -18,12 +18,13 @@ const redis = new Redis({
   host: process.env.REDIS_HOST || '127.0.0.1',
 })
 
-console.log(dayjs().tz(TIMEZONE).format('YYYY-MM-DD HH:mm:ss'))
+dayjs.tz.setDefault(TIMEZONE)
+console.log(dayjs.tz().format('YYYY-MM-DD HH:mm:ss'))
 router.use(userMiddle)
 
 router.post('/', async (req, res) => {
   // activity id, user
-  const now = dayjs().tz(TIMEZONE)
+  const now = dayjs.tz()
   const email = req.user.email
   const activityId = req.body.activity_id
   const ts = now.utc().format('YYYYMMDDHHmmss')
