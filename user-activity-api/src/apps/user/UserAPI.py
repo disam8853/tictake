@@ -1,17 +1,12 @@
-from flask import Blueprint, jsonify, Response
+import email
+from flask import Blueprint, jsonify, Response, request, abort
 from models.models import User, db
 
 user_api = Blueprint('UserAPI', __name__)
 
-@user_api.route('/', methods=['GET'])
-def test():
-    user = User.query.filter_by(user_id = 1).first()
-    resp = jsonify(user_id=user.user_id)
-    return resp
-
 
 """
-    User login
+    User login, if login is failed, it will return 401
     @request
     {
         "email": "string",
@@ -25,24 +20,22 @@ def test():
 """
 @user_api.route('/login', methods=['POST'])
 def login():
-    # sql_cmd = """
-    #     select *
-    #     from product
-    #     """
-
-    # query_data = db.engine.execute(sql_cmd)
-    # print(query_data)
-    headers = {"Content-Type": "user_apilication/json"}
-    return make_response(
-        'Test worked!',
-        200,
-        headers=headers
-    )
+    try:
+        email = request.json.get('email')
+        password = request.json.get('password')
+        user = User.query.filter_by(email = email).first()
+        if not user or not user.verify_password(password):
+            return abort(401)
+        else:
+            return Response(status=200)
+    except Exception as e:
+        print(e)
+        return Response(status=500)
 
 
 
 """
-    Create user
+    Create user, if email had existed, it will return 400
     @request
     {
         "first_name": "string",
@@ -58,7 +51,28 @@ def login():
 """
 @user_api.route('/create', methods=['POST'])
 def create_user():
-    user = User(first_name = 'peter', email = 'peter@p.p', password = 'password')
-    db.session.add(user)
-    db.session.commit()
-    return Response(status=200)
+    try: 
+        first_name = request.json.get('first_name')
+        last_name = request.json.get('last_name')
+        email = request.json.get('email')
+        password = request.json.get('password')
+        if User.query.filter_by(email=email).first() is not None:
+            abort(400)
+
+        user = User(
+            first_name = first_name,
+            email = email,
+        )
+        if last_name is None:
+            pass
+        else:
+            user.last_name = last_name
+        user.hash_password(password)
+
+
+        db.session.add(user)
+        db.session.commit()
+        return Response(status=200)
+    except Exception as e:
+        print(e)
+        return Response(status=500)
