@@ -2,8 +2,10 @@ const express = require('express')
 const axios = require('axios')
 const morgan = require('morgan')
 const jwt = require('jsonwebtoken')
+const cookieParser = require('cookie-parser')
 const app = express()
 app.use(express.json())
+app.use(cookieParser())
 const port = process.env.PORT || 8080
 const activityRouter = require('./route/activity')
 const orderRouter = require('./route/order')
@@ -12,8 +14,10 @@ const ticketRouter = require('./route/ticket')
 app.use(morgan('dev'))
 
 const USER_ACTIVITY_API = process.env.USER_ACTIVITY_API
+const TICKET_API = process.env.TICKET_API
 const JWT_KEY = process.env.JWT_KEY
-if ([USER_ACTIVITY_API, JWT_KEY].some((k) => !k)) {
+
+if ([USER_ACTIVITY_API, TICKET_API, JWT_KEY].some((k) => !k)) {
   throw new Error('env not defined')
 }
 
