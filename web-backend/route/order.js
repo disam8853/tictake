@@ -9,9 +9,11 @@ const userMiddle = require('./../user-middleware')
 const router = express.Router()
 const Redis = require('ioredis')
 const { v4: uuidv4 } = require('uuid')
+const producer = require('../utils/kafka')
 
 const TICKET_API = process.env.TICKET_API
 const REDIS_EXPIRE_TIME_IN_SECONDS = process.env.REDIS_EXPIRE_TIME_IN_SECONDS
+const SIM_MODE = process.env.SIM_MODE
 const redis = new Redis({
   port: process.env.REDIS_PORT || 6379,
   host: process.env.REDIS_HOST || '127.0.0.1',
@@ -28,17 +30,29 @@ router.post('/', async (req, res) => {
   const orderId = uuidv4()
   const ticketKey = `${email}#${activityId}#${ts}`
 
-  const result = await redis.get('uid')
-  if (!result) {
-    await redis.set(orderId, ticketKey, 'EX', REDIS_EXPIRE_TIME_IN_SECONDS || 60)
+  try {
+    const result = await redis.get('uid')
+    if (!result) {
+      await redis.set(orderId, ticketKey, 'EX', REDIS_EXPIRE_TIME_IN_SECONDS || 60)
+    }
+  } catch (error) {
+    return res.status(500).send({ msg: 'redis error', error })
   }
+
   // TODO: send to Kafka
-  const order = {
-    member: email,
-    activity_id: activityId,
-    order_timestamp: now.format('YYYY-MM-DD HH:mm:ss'),
+  if (SIM_MODE) simulateAsyncKafka(ticketKey)
+  else {
+    try {
+      console.log('start sending message to kafka')
+      await producer.send({
+        topic: 'tictake',
+        messages: [{ key: orderId, value: ticketKey }],
+      })
+      console.log('sending message to kafka complete')
+    } catch (error) {
+      return res.status(500).send({ msg: 'kafka error', error })
+    }
   }
-  simulateAsyncKafka(order)
 
   // return order id
   return res.send({ order_id: orderId })
@@ -66,14 +80,14 @@ router.get('/:orderId', async (req, res) => {
 
 module.exports = router
 
-async function simulateAsyncKafka(order) {
+async function simulateAsyncKafka(ticketKey) {
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms))
   }
   await sleep(process.env.SIM_WAITING_TIME || 3 * 1000)
   console.log('start creating ticket')
   try {
-    const { data } = await axios.post(`${TICKET_API}/add_ticket_order/`, order)
+    const { data } = await axios.post(`${TICKET_API}/ticket/`, { key: ticketKey })
     console.log(data)
   } catch (error) {
     console.log(error)

@@ -1,6 +1,7 @@
 resources:
   - ../../base/web-backend
   - ../../base/web-frontend
+  - ../../base/redis
   - ingressroute.yaml
 
 configMapGenerator:

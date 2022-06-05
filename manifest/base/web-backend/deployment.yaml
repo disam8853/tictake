@@ -26,7 +26,3 @@ spec:
                 name: web-backend-config
             - secretRef:
                 name: web-backend-secret
-        - name: redis
-          image: redis:alpine
-          ports:
-            - containerPort: 6379

@@ -1,0 +1,25 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-consumer
+  labels:
+    app: kafka-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-consumer
+  template:
+    metadata:
+      labels:
+        app: kafka-consumer
+    spec:
+      containers:
+        - name: kafka-consumer
+          image: ghcr.io/disam8853/tictake/kafka-consumer:latest
+          envFrom:
+            - configMapRef:
+                name: kafka-consumer-config
+            - secretRef:
+                name: kafka-consumer-secret

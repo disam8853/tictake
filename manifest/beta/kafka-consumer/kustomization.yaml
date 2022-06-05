@@ -1,0 +1,12 @@
+resources:
+  - ../../base/kafka-consumer
+
+configMapGenerator:
+  - name: kafka-consumer-config
+    envs:
+      - config/env.properties
+
+secretGenerator:
+  - name: kafka-consumer-secret
+    envs:
+      - config/secret.properties
