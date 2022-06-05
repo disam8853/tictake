@@ -4,6 +4,7 @@ resources:
   - api-ticket/
   - api-user-activity/
   - kafka/
+  - kafka-consumer/
   - web/
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
