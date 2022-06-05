@@ -30,8 +30,4 @@ def utc_to_str(time_utc):
 def str_to_gmt(time_str):
     time_format = "%Y%m%d%H%M%S"
     dt = datetime.strptime(str(time_str), time_format)
-    print(dt)
     return dt.strftime("%Y-%m-%d %H:%M:%S")
-    # time_format = "%Y-%m-%d %H:%M:%S"
-    # dt = datetime.strptime(str(time_utc), time_format)
-    # return dt.strftime("%Y%m%d%H%M%S")

@@ -61,23 +61,43 @@ def create_order(
     if res[0] is None:
         return ""
     else:
-        return row_key
+        return jsonify(key=row_key,
+                       member=member,
+                       activity_id=activity_id,
+                       has_paid="0",
+                       order_timestamp=order_timestamp)
 
 
 def order_has_paid(
         key,
         table_id="tictake",
         column_family_id="activity"):
-    
+
     table = instance.table(table_id)
     row = table.row(key)
 
     if row is not None:
         utc_datetime = datetime.datetime.utcnow()
         row.set_cell(column_family_id, "has_paid".encode(),
-                 "1", timestamp=utc_datetime)
-        row.commit()
-        return key
+                     "1", timestamp=utc_datetime)
+        new_row = row.commit()
+        print(new_row, file=sys.stderr)
+        return jsonify(key=key)
+        # if new_row is not None:
+        #     member_cell = new_row.cells[column_family_id]["member".encode()][0]
+        #     activity_id_cell = new_row.cells[column_family_id]["activity_id".encode(
+        #     )][0]
+        #     has_paid_cell = new_row.cells[column_family_id]["has_paid".encode(
+        #     )][0]
+        #     order_timestamp_cell = new_row.cells[column_family_id][
+        #         "order_timestamp".encode()][0]
+
+        #     return jsonify(key=key,
+        #                    member=member_cell.value.decode("utf-8"),
+        #                    activity_id=activity_id_cell.value.decode("utf-8"),
+        #                    has_paid=has_paid_cell.value.decode("utf-8"),
+        #                    order_timestamp=utils.gmt_to_utc8(order_timestamp_cell.value.decode("utf-8")))
+        
     else:
         return ""
 
@@ -99,7 +119,8 @@ def get_order_by_key(
         order_timestamp_cell = row.cells[column_family_id][
             "order_timestamp".encode()][0]
 
-        return jsonify(member=member_cell.value.decode("utf-8"),
+        return jsonify(key=key,
+                       member=member_cell.value.decode("utf-8"),
                        activity_id=activity_id_cell.value.decode("utf-8"),
                        has_paid=has_paid_cell.value.decode("utf-8"),
                        order_timestamp=utils.gmt_to_utc8(order_timestamp_cell.value.decode("utf-8")))
@@ -120,10 +141,10 @@ def get_order_by_filter(
         key += "^"+member+"#"
     else:
         key += ".*#"
-        
+
     if activity_id is not None:
         key += activity_id+"#"
-    key+=".*"
+    key += ".*"
 
     # filter data
     row_filter = row_filters.RowKeyRegexFilter(key.encode())
@@ -136,6 +157,7 @@ def get_order_by_filter(
         order_timestamp_cell = row.cells[column_family_id][b"order_timestamp"][0]
         # add row to response
         add_row = {}
+        add_row["key"] = ""
         add_row["member"] = member_cell.value.decode("utf-8")
         add_row["activity_id"] = activity_id_cell.value.decode("utf-8")
         add_row["has_paid"] = has_paid_cell.value.decode("utf-8")

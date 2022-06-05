@@ -27,14 +27,16 @@ def test_api():
         success
             status code 200
             {
-                "msg": "string"
+                "activity_id": "string",
+                "has_paid": "string", # 1:yes ; 0:no
+                "key": "member#activity_id#yyyymmddhhmmss",
+                "member": "string",
+                "order_timestamp": "yyyy-mm-dd hh:mm:ss"
             }
         error
             status code 500
 
 """
-
-
 @app.route('/add_ticket_order/', methods=['POST'])
 def add_ticket_order():
     try:
@@ -42,9 +44,9 @@ def add_ticket_order():
         member = data['member']
         activity_id = data['activity_id']
         order_timestamp = utils.utc8_to_gmt(data['order_timestamp'])
-        key = bigtable.create_order(member, activity_id, order_timestamp)
-        if key != "":
-            return jsonify(msg=f"create order: {key} successfully", key=key)
+        res = bigtable.create_order(member, activity_id, order_timestamp)
+        if res != "":
+            return res
         else:
             return Response(status=500)
     except Exception as e:
@@ -64,7 +66,11 @@ def add_ticket_order():
         success
             status code 200
             {
-                "msg": "string"
+                "activity_id": "string",
+                "has_paid": "string", # 1:yes ; 0:no
+                "key": "member#activity_id#yyyymmddhhmmss",
+                "member": "string",
+                "order_timestamp": "yyyy-mm-dd hh:mm:ss"
             }
         error
             status code 500
@@ -75,9 +81,9 @@ def add_ticket_by_key():
     data = request.get_json()
     keys = data['key'].split('#')
     if len(keys) == 3 and len(keys[0]) > 0 and len(keys[1]) > 0 and len(keys[2]) == 14:
-        key = bigtable.create_order(keys[0], keys[1], utils.str_to_gmt(keys[2]))
-        if key != "":
-            return jsonify(msg=f"create order: {key} successfully")
+        res = bigtable.create_order(keys[0], keys[1], utils.str_to_gmt(keys[2]))
+        if res != "":
+            return res
         else:
             return Response(status=500)
     else:
@@ -89,12 +95,17 @@ def add_ticket_by_key():
     @request
         url: <BASE_URL>/ticket/<key>
         key:member#activity_id#order_timestamp(yyyymmddhhmmss)
+        # Please use URL encode before sending a request
 
     @response
         success
             status code 200
             {
-                "msg": "string"
+                "activity_id": "string",
+                "has_paid": "string", # 1:yes ; 0:no
+                "key": "member#activity_id#yyyymmddhhmmss",
+                "member": "string",
+                "order_timestamp": "yyyy-mm-dd hh:mm:ss"
             }
         error
             status code 500
@@ -106,7 +117,7 @@ def update_ticket_order(key):
         key = unquote(key)
         if key != "":
             res = bigtable.order_has_paid(key)
-            return jsonify(msg=f"Order {key} was paid successfully")
+            return res
         else:
             return Response(status=500)
     except Exception as e:
@@ -125,10 +136,11 @@ def update_ticket_order(key):
         success
             status code 200
             {
-                "member":"string",
-                "activity_id":"string",
-                "has_paid":"string" # 1:yes ; 0:no
-                "order_timestamp":"yyyy-mm-dd hh:mm:ss"
+                "activity_id": "string",
+                "has_paid": "string", # 1:yes ; 0:no
+                "key": "member#activity_id#yyyymmddhhmmss",
+                "member": "string",
+                "order_timestamp": "yyyy-mm-dd hh:mm:ss"
             }
         error
             status code 200
@@ -162,10 +174,11 @@ def get_ticket_by_key(key):
             status code 200
             [
                 {
-                    "member":"string",
-                    "activity_id":"string",
-                    "has_paid":"string" # 1:yes ; 0:no
-                    "order_timestamp":"yyyy-mm-dd hh:mm:ss"
+                    "activity_id": "string",
+                    "has_paid": "string",  # 1:yes ; 0:no
+                    "key": "member#activity_id#yyyymmddhhmmss",
+                    "member": "string",
+                    "order_timestamp": "yyyy-mm-dd hh:mm:ss"
                 },
                 ...
             ]
