@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from passlib.hash import sha256_crypt
 
 db = SQLAlchemy()
 
@@ -9,7 +10,13 @@ class User(db.Model):
     first_name = db.Column(db.String(20), nullable=False)
     last_name = db.Column(db.String(20))
     email = db.Column(db.String(40), nullable=False)
-    password = db.Column(db.String(64), nullable=False)
+    password = db.Column(db.String(120), nullable=False)
+
+    def hash_password(self, password):
+        self.password = sha256_crypt.encrypt(password)
+
+    def verify_password(self, password):
+        return sha256_crypt.verify(password, self.password)
 
 
 class Activity(db.Model):
@@ -22,4 +29,5 @@ class Activity(db.Model):
     remaining_inventory = db.Column(db.Integer, nullable=False)
     activity_info = db.Column(db.String(300), nullable=False)
     created_time = db.Column(db.DateTime, default=datetime.utcnow(), nullable=False)
+    price = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
