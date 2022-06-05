@@ -1,12 +1,12 @@
-name: CI for kakfka-consumer
+name: CI for kafka-consumer
 on:
   push:
     paths:
-      - kakfka-consumer/**
+      - kafka-consumer/**
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/kakfka-consumer
+  IMAGE_NAME: ${{ github.repository }}/kafka-consumer
 
 jobs:
   build-and-push-image:
@@ -38,7 +38,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
-          context: ./kakfka-consumer
+          context: ./kafka-consumer
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
