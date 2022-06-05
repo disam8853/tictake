@@ -1,0 +1,20 @@
+{
+  "name": "kafka-consumer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "disam8853",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon -r dotenv/config index.js"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "kafkajs": "^2.0.2",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.1",
+    "nodemon": "^2.0.16"
+  }
+}

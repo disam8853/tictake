@@ -43,12 +43,12 @@ router.post('/', async (req, res) => {
   if (SIM_MODE) simulateAsyncKafka(ticketKey)
   else {
     try {
-      await producer.connect()
+      console.log('start sending message to kafka')
       await producer.send({
         topic: 'tictake',
         messages: [{ key: orderId, value: ticketKey }],
       })
-      await producer.disconnect()
+      console.log('sending message to kafka complete')
     } catch (error) {
       return res.status(500).send({ msg: 'kafka error', error })
     }

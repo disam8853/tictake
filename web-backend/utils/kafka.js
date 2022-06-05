@@ -1,4 +1,4 @@
-const { Kafka } = require('kafkajs')
+const { Kafka, logLevel } = require('kafkajs')
 
 const KAFKA_BROKER_URL = process.env.KAFKA_BROKER_URL
 
@@ -7,6 +7,7 @@ if (!KAFKA_BROKER_URL) {
 }
 
 const kafka = new Kafka({
+  logLevel: logLevel.INFO,
   clientId: 'web-backend',
   brokers: [KAFKA_BROKER_URL],
 })
