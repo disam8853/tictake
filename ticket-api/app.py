@@ -149,7 +149,7 @@ def update_ticket_order(key):
             }
 
 """
-@app.route('/get_ticket/<key>', methods=['GET'])
+@app.route('/ticket/<key>', methods=['GET'])
 def get_ticket_by_key(key):
     try:
         key = unquote(key)
