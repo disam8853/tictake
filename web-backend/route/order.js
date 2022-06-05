@@ -33,12 +33,7 @@ router.post('/', async (req, res) => {
     await redis.set(orderId, ticketKey, 'EX', REDIS_EXPIRE_TIME_IN_SECONDS || 60)
   }
   // TODO: send to Kafka
-  const order = {
-    member: email,
-    activity_id: activityId,
-    order_timestamp: now.format('YYYY-MM-DD HH:mm:ss'),
-  }
-  simulateAsyncKafka(order)
+  simulateAsyncKafka(ticketKey)
 
   // return order id
   return res.send({ order_id: orderId })
@@ -66,14 +61,14 @@ router.get('/:orderId', async (req, res) => {
 
 module.exports = router
 
-async function simulateAsyncKafka(order) {
+async function simulateAsyncKafka(ticketKey) {
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms))
   }
   await sleep(process.env.SIM_WAITING_TIME || 3 * 1000)
   console.log('start creating ticket')
   try {
-    const { data } = await axios.post(`${TICKET_API}/add_ticket_order/`, order)
+    const { data } = await axios.post(`${TICKET_API}/ticket/`, { key: ticketKey })
     console.log(data)
   } catch (error) {
     console.log(error)
