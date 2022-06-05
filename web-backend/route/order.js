@@ -9,9 +9,11 @@ const userMiddle = require('./../user-middleware')
 const router = express.Router()
 const Redis = require('ioredis')
 const { v4: uuidv4 } = require('uuid')
+const producer = require('../utils/kafka')
 
 const TICKET_API = process.env.TICKET_API
 const REDIS_EXPIRE_TIME_IN_SECONDS = process.env.REDIS_EXPIRE_TIME_IN_SECONDS
+const SIM_MODE = process.env.SIM_MODE
 const redis = new Redis({
   port: process.env.REDIS_PORT || 6379,
   host: process.env.REDIS_HOST || '127.0.0.1',
@@ -28,12 +30,29 @@ router.post('/', async (req, res) => {
   const orderId = uuidv4()
   const ticketKey = `${email}#${activityId}#${ts}`
 
-  const result = await redis.get('uid')
-  if (!result) {
-    await redis.set(orderId, ticketKey, 'EX', REDIS_EXPIRE_TIME_IN_SECONDS || 60)
+  try {
+    const result = await redis.get('uid')
+    if (!result) {
+      await redis.set(orderId, ticketKey, 'EX', REDIS_EXPIRE_TIME_IN_SECONDS || 60)
+    }
+  } catch (error) {
+    return res.status(500).send({ msg: 'redis error', error })
   }
+
   // TODO: send to Kafka
-  simulateAsyncKafka(ticketKey)
+  if (SIM_MODE) simulateAsyncKafka(ticketKey)
+  else {
+    try {
+      await producer.connect()
+      await producer.send({
+        topic: 'tictake',
+        messages: [{ key: orderId, value: ticketKey }],
+      })
+      await producer.disconnect()
+    } catch (error) {
+      return res.status(500).send({ msg: 'kafka error', error })
+    }
+  }
 
   // return order id
   return res.send({ order_id: orderId })
