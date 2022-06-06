@@ -41,6 +41,12 @@ POST /api/v1/user/login
 ##### HTTP Response Body
 ```
 Http Status == 200
+{
+    "user_id": "integer",
+    "first_name": "string",
+    "last_name": "string",
+    "email": "string"
+}
 ```
 
 ## Activity service
