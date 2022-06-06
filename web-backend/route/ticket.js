@@ -51,7 +51,7 @@ router.get('/:ticketId', async (req, res) => {
   // return order status
   let data
   try {
-    const result = await axios.get(`${TICKET_API}/get_ticket/${encodeURIComponent(req.params.ticketId)}`)
+    const result = await axios.get(`${TICKET_API}/ticket/${encodeURIComponent(req.params.ticketId)}`)
     data = result.data
   } catch (error) {
     if (error.response) {
