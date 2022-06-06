@@ -47,7 +47,6 @@ def reduce_remaining_inventory(activity_id):
         "GET", f"{USER_ACTIVITY_URL}/{activity_id}")
     activity_json = json.loads(activity_response.text)
     remaining_inventory = activity_json['remaining_inventory']
-    # print("remaining_inventory:",remaining_inventory, file=sys.stderr)
 
     # reduce_by_activity_id
     if remaining_inventory > 0:

@@ -117,7 +117,6 @@ def update_ticket_order(key):
     try:
         key = unquote(key)
         # reduce remaining_inventory by activity id
-        # 記得把其他api的url設成一個環境變數，因為在k8s裡面會有自己的網址
         suc = utils.reduce_remaining_inventory(key.split('#')[1])
         if suc is False:
             return Response(status=500)
