@@ -21,6 +21,10 @@ if ([USER_ACTIVITY_API, TICKET_API, JWT_KEY].some((k) => !k)) {
   throw new Error('env not defined')
 }
 
+app.get('/', (req, res) => {
+  res.send('ok')
+})
+
 app.post('/api/signup', async (req, res) => {
   const userInfo = req.body
   try {
