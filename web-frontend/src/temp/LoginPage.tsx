@@ -23,7 +23,7 @@ export default function LoginPage(
             "email" : form.email.value,
             "password" : form.password.value,
         }
-        console.log(user)
+
         await login(user)
       }    
     return (

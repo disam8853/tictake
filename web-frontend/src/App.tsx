@@ -10,6 +10,7 @@ import CreateActivityPage from './containers/create-activity-page'
 import SearchForActivitiesPage from './containers/search-for-activities-page';
 import blue from '@mui/material/colors/blue';
 import MyTickets from './containers/my-tickets-page';
+import BasicLayout from './components/BasicLayout';
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
@@ -21,47 +22,57 @@ function App() {
   React.useEffect( ()=>{}, [refreshCnt])
   return (
     <Switch>
+      
       <Route path="/login">
+        
         <LoginPage/>
       </Route>
 
       <Route path="/my-tickets">
-      <ThemeProvider theme={darkTheme}>
-      <div style={{
-          // "backgroundImage": "url('view-3.jpg')",
-          "backgroundSize": "cover",
-          "height": "1130px"
-        // "backgroundColor": "rgba(0, 0, 0, .6)"
-        }}>
-        <MyTickets/>
-        </div>
-        </ThemeProvider>
+        <BasicLayout>{
+          <ThemeProvider theme={darkTheme}>
+            <div style={{
+              "backgroundSize": "cover",
+              "height": "1130px"
+            // "backgroundColor": "rgba(0, 0, 0, .6)"
+            // "backgroundImage": "url('view-3.jpg')",
+            }}>
+            <MyTickets/>
+            </div>
+          </ThemeProvider>}
+        </BasicLayout>
       </Route>
 
       <Route path="/search-for-activities">
-        <ThemeProvider theme={darkTheme}>
-          {/* <div style={{"backgroundColor": "rgb(0, 30, 60)", "height": "1130px"}} > */}
-          <div style={{
-              // "backgroundColor": "rgba(0, 0, 0, .9)",
-          // "backgroundImage": "url('view-2.jpg')",
-          "backgroundSize": "cover",
-          "height": "1130px"
-        
-        }}>
-            <SearchForActivitiesPage/>
-          </div>
-        </ThemeProvider>
+        <BasicLayout>{
+          <ThemeProvider theme={darkTheme}>
+            <div style={{
+              "backgroundSize": "cover",
+              "height": "1130px"
+            // "backgroundColor": "rgba(0, 0, 0, .6)"
+            // "backgroundImage": "url('view-3.jpg')",
+            }}>
+              <SearchForActivitiesPage/>
+            </div>
+          </ThemeProvider>}
+        </BasicLayout>
       </Route>
 
       <Route path="/create-activity">
-        <div style={{
-          "backgroundImage": "url('view-1.png')",
-          "backgroundSize": "cover",
-          "height": "1130px"
-        // "backgroundColor": "rgba(0, 0, 0, .6)"
-        }}>
-        <CreateActivityPage/> 
-        </div>
+        <BasicLayout>{
+              <div style={{
+                "backgroundSize": "cover",
+                "height": "1130px",
+                "backgroundImage": "url('view-1.png')"
+              // "backgroundColor": "rgba(0, 0, 0, .6)"
+              // "backgroundImage": "url('view-3.jpg')",
+              }}>
+                <CreateActivityPage/>
+              </div>}
+        </BasicLayout>
+      </Route>
+      <Route path="/">
+        <LoginPage/>
       </Route>
     </Switch> 
     

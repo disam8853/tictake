@@ -14,7 +14,8 @@ export type TicketType = {
     activity_name?: string;
     activity_info?: string;
     price?: number;
-    cnt?: number
+    cnt?: number;
+    key: string
 }
 
 export type TicketsType = {
@@ -32,5 +33,6 @@ export type ActivityType = {
     total_inventory: number,
     remaining_inventory: number,
     price: number
+
 }
 

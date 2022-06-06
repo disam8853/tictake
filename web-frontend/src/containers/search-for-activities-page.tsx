@@ -1,5 +1,4 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -20,6 +19,8 @@ import { history } from '../index'
 import BuyTicketModal from '../components/buy-ticket-modal';
 import Modal from '@mui/material/Modal';
 import  { getAllActivities } from '../axios/index'
+import { ActivityType } from '../Types/ticket';
+import LoadingSpin from "react-loading-spin";
 
 function Copyright(props: any) {
   return (
@@ -31,161 +32,29 @@ function Copyright(props: any) {
   );
 }
 
-const tiers = [
-  {
-    title: 'title1',
-    price: '100',
-    description: [
-      'description1',
-      'description1',
-      'description1',
-      'description1',
-    ],
-    buttonText: 'BUY IT NOW',
-    buttonVariant: 'outlined',
-  },
-  {
-    title: 'title2',
-    // subheader: 'Most popular',
-    price: '200',
-    description: [
-        'Like the sun that hangs above the sky I wanna see us hang, just you and I Like the ocean gives away the breeze I wanna ride your wave and be your tide'
-    ],
-    buttonText: 'BUY IT NOW',
-    buttonVariant: 'outlined',
-  },
-  {
-    title: 'Enterprise',
-    price: '30',
-    description: [
-        'description1description1description1description1description1description1description1 ',
-        'description1',
-        // 'description1',
-        // 'description1',
-    ],
-    buttonText:'BUY IT NOW',
-    buttonVariant: 'outlined',
-  },
-  {
-    title: 'Enterprise',
-    price: '30',
-    description: [
-        'description1description1description1description1description1description1description1 ',
-        'description1',
-        // 'description1',
-        // 'description1',
-    ],
-    buttonText:'BUY IT NOW',
-    buttonVariant: 'outlined',
-  },
-  {
-    title: 'Enterprise',
-    price: '30',
-    description: [
-        'description1description1description1description1description1description1description1 ',
-        'description1',
-        // 'description1',
-        // 'description1',
-    ],
-    buttonText:'BUY IT NOW',
-    buttonVariant: 'outlined',
-  },
-  {
-    title: 'Enterprise',
-    price: '30',
-    description: [
-        'description1description1description1description1description1description1description1 ',
-        'description1',
-        // 'description1',
-        // 'description1',
-    ],
-    buttonText:'BUY IT NOW',
-    buttonVariant: 'outlined',
-  },
-  {
-    title: 'Enterprise',
-    price: '30',
-    description: [
-        'description1description1description1description1description1description1description1 ',
-        'description1',
-        // 'description1',
-        // 'description1',
-    ],
-    buttonText:'BUY IT NOW',
-    buttonVariant: 'outlined',
-  },
-];
-
-
-function PricingContent() {
+function SearchForActivitiesContent() {
+  const [activities, setActivities] = React.useState<ActivityType[]>([]);
   React.useEffect( () => {
-    console.log('useEffect')
-    const data = getAllActivities();
-
+    getAllActivities(setActivities)
   }, []);
 
+  React.useEffect( ()=>{
+  }, [activities])
 
   return (
     <React.Fragment>
        
       <GlobalStyles styles={{ ul: { margin: 0, padding: 0, listStyle: 'none' } }} />
       <CssBaseline />
-      <AppBar
-        position="static"
-        color="inherit"
-        elevation={0}
-        // style={{"backgroundColor": "rgb(0,85,150)"}}
-        sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
-        
-      >
-        <Toolbar sx={{ flexWrap: 'wrap' }}>
-           <SmartToyIcon fontSize='large' style={{'marginRight': '10px'}} />
-        
-          <Typography variant="h5" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-          Tictake
-          </Typography>
-          <nav>
-           
-            <Link
-              variant="button"
-              color="text.primary"
-              href="/search-for-activities"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              search for activities
-            </Link>
-
-            <Link
-              variant="button"
-              color="text.primary"
-              href="/create-activity"
-              sx={{ my: 1, mx: 1.5 }}
-            //   onClick={()=> { history.push('./create-activity')}}
-            >
-              Create Activity
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="/my-tickets"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              My Tickets
-            </Link>
-          </nav>
-          <Button href="#" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
-            Log Out
-          </Button>
-        </Toolbar>
-      </AppBar>
       {/* Hero unit */}
-      <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 8, pb: 6 }}>
+      <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 0, pb: 6 }}>
         <Typography
           component="h2"
           variant="h3"
           align="center"
           color="text.primary"
           gutterBottom
+          style={{ "marginTop": "50px" }}
         >
           Tonight,
         </Typography>
@@ -205,27 +74,28 @@ function PricingContent() {
            Quickly buy activity tickets and have fun maybe!
         </Typography>
       </Container>
-      {/* End hero unit */}
+
+       
+
+     
       <Container maxWidth="md" component="main">
         <Grid container spacing={5} alignItems="flex-end"
-            style={{"marginTop": "40px"}}>
-          {tiers.map((tier, idx) => (
+            // style={{"marginTop": "30px"}}
+          >
+          {activities.map((activitiy, idx) => (
             // Enterprise card is full width at sm breakpoint
             <Grid
             style={{"height": "400px"}}
-             
               item
               key={idx}
               xs={12}
-              sm={tier.title === 'Enterprise' ? 12 : 6}
+              sm={activitiy.activity_name === 'Enterprise' ? 12 : 6}
               md={4}
             >
               <Card>
                 <CardHeader
-                //   style={{"backgroundColor": "rgb(62, 80, 120)"}}
                   style={{"backgroundColor": "white", "color": "black"}}
-                  
-                  title={tier.title}
+                  title={activitiy.activity_name}
                 //   subheader={tier.subheader}
                   titleTypographyProps={{ align: 'center' }}
                 //   action={tier.title === 'Pro' ? <StarIcon /> : null}
@@ -239,9 +109,7 @@ function PricingContent() {
                         : theme.palette.grey[700],
                   }}
                 />
-                <CardContent
-                    // style={{"backgroundColor": "rgb(0, 0, 0)"}}
-                >
+                <CardContent>
                   <Box
                     sx={{
                       display: 'flex',
@@ -251,7 +119,7 @@ function PricingContent() {
                     }}
                   >
                     <Typography component="h2" variant="h3" color="text.primary">
-                      ${tier.price}
+                      ${activitiy.price}
                     </Typography>
                     <Typography variant="h6" color="text.secondary"
                      style={{"marginLeft": "10px"}}
@@ -259,43 +127,23 @@ function PricingContent() {
                        NTD
                     </Typography>
                   </Box>
-                  <ul>
-                    {tier.description.map((line, idx) => (
-                        <div
-                        key={idx}
-                        style={{"whiteSpace": "normal",
-                        "wordBreak": "break-all",
-                        "wordWrap": "break-word"
-                        }}>
-                            <p>{line}</p>
-                        </div>
-                    //   <Typography
-                    //     component="li"
-                    //     variant="subtitle1"
-                    //     align="center"
-                    //     key={line}
-                    //   >
-                    //     {line}
-                    //   </Typography>
-                    ))}
+                  <ul style={{"textAlign": "center"}}>
+                    <li>活動資訊：{activitiy.activity_info}</li>
+                    {/* <li>創立時間：{activitiy.created_time.toString}</li> */}
                   </ul>
-                </CardContent>
-                <CardActions 
-                >
-                  <BuyTicketModal id={tier.title}></BuyTicketModal>
-                  {/* <Button
-                    fullWidth
-                    variant={tier.buttonVariant as 'outlined' | 'contained'}
-                  >
-                    {tier.buttonText}
-                  </Button> */}
                   
+
+                   
+                </CardContent>
+                <CardActions>
+                  <BuyTicketModal activity_id={activitiy.activity_id} activity_name={activitiy.activity_name}></BuyTicketModal>                  
                 </CardActions>
               </Card>
             </Grid>
           ))}
         </Grid>
       </Container>
+
       {/* Footer */}
       <Container
         style={{"marginTop": "130px"}}
@@ -307,20 +155,14 @@ function PricingContent() {
           py: [3, 6],
         }}
       >
-        <Grid 
-        //  style={{"marginTop": "100px"}}
-        container spacing={4} justifyContent="space-evenly">
-        </Grid>
-        <Copyright 
-    
-        sx={{ mt: 5 }} />
+        <Grid container spacing={4} justifyContent="space-evenly"></Grid>
+        <Copyright sx={{ mt: 5 }} />
       </Container>
       {/* End footer */}
-
     </React.Fragment>
   );
 }
 
 export default function SearchForActivitiesPage() {
-  return <PricingContent />;
+  return <SearchForActivitiesContent />;
 }

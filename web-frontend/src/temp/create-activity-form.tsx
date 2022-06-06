@@ -29,7 +29,7 @@ export default function createActivityModal(
             "activityEndTime" : form.activityEndTime.value,
             "totalInventory" : form.totalInventory.value
          }        
-        console.log(activity)
+
         await createActivity(activity)
     }    
 

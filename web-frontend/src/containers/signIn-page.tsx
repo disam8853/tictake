@@ -54,7 +54,7 @@ export default function SignInPpage() {
       email: data.get('email'),
       password: data.get('password'),
     }
-    console.log(user)
+
     await login(user)
   };
 

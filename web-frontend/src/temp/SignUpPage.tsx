@@ -26,7 +26,7 @@ export default function SignUpPage(
             "email" : form.email.value,
             "password" : form.password.value,
         }
-        console.log(user)
+
         await signUp(user)
     }    
     return (
