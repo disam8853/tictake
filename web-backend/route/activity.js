@@ -1,6 +1,7 @@
 const express = require('express')
 const axios = require('axios')
 const userMiddle = require('./../user-middleware')
+const dayjs = require('dayjs')
 const router = express.Router()
 
 const USER_ACTIVITY_API = process.env.USER_ACTIVITY_API
@@ -36,10 +37,17 @@ router.get('/:activitiesId', async (req, res) => {
 
 // create activity
 router.post('/', userMiddle, async (req, res) => {
-  let data
+  const startDate = dayjs(req.body.start_date).tz()
+  const endDate = dayjs(req.body.end_date).tz()
+  const data = {
+    ...req.body,
+    user_id: req.user.user_id,
+    start_date: startDate.format('YYYY-MM-DD HH:mm:ss'),
+    end_date: endDate.format('YYYY-MM-DD HH:mm:ss'),
+  }
+  console.log(data)
   try {
-    const result = await axios.post(`${USER_ACTIVITY_API}/api/v1/activity/`, req.body)
-    data = result.data
+    await axios.post(`${USER_ACTIVITY_API}/api/v1/activity/`, data)
   } catch (error) {
     if (error.response) {
       return res.status(error.response.status).send('error\n' + error.response.data)

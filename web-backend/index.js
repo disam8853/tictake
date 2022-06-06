@@ -35,12 +35,15 @@ app.post('/api/signup', async (req, res) => {
 })
 
 app.post('/api/login', async (req, res) => {
+  let user = {}
   try {
     const body = {
       email: req.body.email,
       password: req.body.password,
     }
-    await axios.post(`${USER_ACTIVITY_API}/api/v1/user/login`, body)
+    const { data } = await axios.post(`${USER_ACTIVITY_API}/api/v1/user/login`, body)
+    user = data
+    console.log(data)
   } catch (error) {
     if (error.response) {
       return res.status(error.response.status).send('error\n' + error.response.data)
@@ -48,9 +51,6 @@ app.post('/api/login', async (req, res) => {
     return res.status(500).send('error\n' + error)
   }
 
-  const user = {
-    email: req.body.email,
-  }
   // expires in one hour
   const token = jwt.sign({ user }, JWT_KEY, { expiresIn: process.env.JWT_EXP_TIME || 60 * 60 })
   res.cookie('access_token', token)
