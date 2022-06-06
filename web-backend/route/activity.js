@@ -9,7 +9,7 @@ const USER_ACTIVITY_API = process.env.USER_ACTIVITY_API
 router.get('/', async (req, res) => {
   let data
   try {
-    const result = await axios.get(`${USER_ACTIVITY_API}/api/v1/activity`)
+    const result = await axios.get(`${USER_ACTIVITY_API}/api/v1/activity/`)
     data = result.data
   } catch (error) {
     if (error.response) {
