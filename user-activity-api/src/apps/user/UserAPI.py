@@ -15,6 +15,12 @@ user_api = Blueprint('UserAPI', __name__)
     @response
         success
             status code 200
+            {   
+                "user_id": "integer",
+                "first_name": "string",
+                "last_name": "string",
+                "email": "string"
+            }
         error
             status code 500
 """
@@ -27,7 +33,13 @@ def login():
         if not user or not user.verify_password(password):
             return Response(status=401)
         else:
-            return Response(status=200)
+            resp = jsonify(
+                user_id = user.user_id,
+                first_name = user.first_name,
+                last_name = user.last_name,
+                email = user.email
+            )
+            return resp
     except Exception as e:
         print(e)
         return Response(status=500)
