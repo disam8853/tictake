@@ -1,0 +1,16 @@
+resources:
+  - ../../../base/web-backend
+  - ../../../base/web-frontend
+  - ../../../base/redis
+  - hpa.yaml
+  - ingressroute.yaml
+
+configMapGenerator:
+  - name: web-backend-config
+    envs:
+      - config/env.properties
+
+secretGenerator:
+  - name: web-backend-secret
+    envs:
+      - config/secret.properties

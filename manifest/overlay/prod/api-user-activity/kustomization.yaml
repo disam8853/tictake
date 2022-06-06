@@ -1,12 +1,12 @@
 resources:
-  - ../../base/kafka-consumer
+  - ../../../base/api-user-activity
 
 configMapGenerator:
-  - name: kafka-consumer-config
+  - name: api-user-activity-config
     envs:
       - config/env.properties
 
 secretGenerator:
-  - name: kafka-consumer-secret
+  - name: api-user-activity-secret
     envs:
       - config/secret.properties

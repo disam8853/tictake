@@ -1,13 +1,12 @@
 resources:
-  - ../../base/api-user-activity
-  - ingressroute.yaml
+  - ../../../base/kafka-consumer
 
 configMapGenerator:
-  - name: api-user-activity-config
+  - name: kafka-consumer-config
     envs:
       - config/env.properties
 
 secretGenerator:
-  - name: api-user-activity-secret
+  - name: kafka-consumer-secret
     envs:
       - config/secret.properties

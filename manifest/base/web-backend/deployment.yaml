@@ -21,6 +21,13 @@ spec:
           ports:
             - containerPort: 8080
               name: http
+          resources:
+            requests:
+              cpu: 250m
+              memory: 100Mi
+            limits:
+              cpu: 512m
+              memory: 100Mi
           envFrom:
             - configMapRef:
                 name: web-backend-config

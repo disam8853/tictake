@@ -1,0 +1,12 @@
+resources:
+  - ../../../base/api-ticket
+
+configMapGenerator:
+  - name: api-ticket-config
+    envs:
+      - config/env.properties
+
+secretGenerator:
+  - name: bigtable-credential
+    files:
+      - config/google-credential.json

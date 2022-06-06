@@ -1,5 +1,5 @@
 resources:
-  - ../../base/api-ticket
+  - ../../../base/api-ticket
   - ingressroute.yaml
 
 configMapGenerator:

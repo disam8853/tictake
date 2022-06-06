@@ -1,15 +1,13 @@
 resources:
-  - ../../base/web-backend
-  - ../../base/web-frontend
-  - ../../base/redis
+  - ../../../base/api-user-activity
   - ingressroute.yaml
 
 configMapGenerator:
-  - name: web-backend-config
+  - name: api-user-activity-config
     envs:
       - config/env.properties
 
 secretGenerator:
-  - name: web-backend-secret
+  - name: api-user-activity-secret
     envs:
       - config/secret.properties
