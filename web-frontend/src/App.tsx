@@ -19,12 +19,12 @@ const darkTheme = createTheme({
 
 function App() {
   const [refreshCnt, setRefreshCnt] = React.useState(0)
-  React.useEffect( ()=>{}, [refreshCnt])
+  React.useEffect( ()=>{
+    console.log('version 1.0')
+  }, [])
   return (
     <Switch>
-      
       <Route path="/login">
-        
         <LoginPage/>
       </Route>
 

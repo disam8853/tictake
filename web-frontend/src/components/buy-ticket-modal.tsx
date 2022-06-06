@@ -75,7 +75,8 @@ export default function BuyTicketModal(
       ticket_id: encodeURIComponent(ticketKey)
     }
    
-    await payOrder(order, setOpen);
+    await payOrder(order, setOpen, SetActualOrder);
+
   };
 
   return (

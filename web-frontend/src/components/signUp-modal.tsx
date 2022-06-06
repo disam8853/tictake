@@ -25,7 +25,7 @@ function Copyright(props: any) {
 
 const theme = createTheme();
 
-export default function SignUp() {
+export default function SignUp( props: {handleClose: any}) {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -37,12 +37,12 @@ export default function SignUp() {
     }
     event.stopPropagation()
     await signUp(user)
+    props.handleClose()
   };
 
   return (
     <ThemeProvider theme={theme}>
       <Container 
-
         component="main" maxWidth="xs">
         <CssBaseline />
         <Box

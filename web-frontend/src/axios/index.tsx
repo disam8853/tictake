@@ -32,7 +32,7 @@ export const signUp = async (user: any)=>{
     const url =  '/api/signup'
     await instance.post(url, user).then(({ data }) => {  
         alert("註冊成功")
-        history.push('/search-for-activities')
+        // history.push('/login')
     }).catch((err) => {
         alert("註冊失敗：該信箱已註冊過，請重新嘗試")
         
@@ -59,13 +59,16 @@ export const createActivity = async (activity: any)=>{
     })
 }
 
-export const payOrder = async (order: any, setOpen?:any)=>{
+export const payOrder = async (order: any, setOpen?:any, SetActualOrder?: any)=>{
     const instance = axios.create()
     const url =  `/api/tickets/${order.ticket_id}`
     await instance.put(url, order).then(async ({ data }) => {  
         alert(`訂單編號：${order.ticket_id}: 付款完成`)
         if(setOpen){
             setOpen(false)
+        }
+        if(SetActualOrder){
+            SetActualOrder(false)
         }
         // history.push('./my-tickets')
         return data

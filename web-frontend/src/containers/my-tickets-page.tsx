@@ -38,8 +38,6 @@ function PricingContent() {
   React.useEffect( ()=>{
     getAllTicketsByUser(setTickets)
     getAllActivities(setActivities)
-  
-
   }, [])
 
 
@@ -70,88 +68,83 @@ function PricingContent() {
     // for (const [key, value] of actuall_tickets_map.entries()) {
     //    actuall_tickets.push(value);
     // }
- 
+    // actuall_tickets.reverse()
     setShowTickets(actuall_tickets)
   }, [tickets])
 
-  React.useEffect( ()=>{
-  }, [tickets])
   const convertStatus = (status:number) => {
     if(status == 1) { return '已付款'}
     else{ return '未付款'}
   }
    
-      const columns = React.useMemo(
-        () => [
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: '已購買活動票券',
+        columns: [
           {
-            Header: '已購買活動票券',
-            columns: [
-              {
-                Header: '訂單編號',
-                accessor: 'key',
-              },
-              {
-                Header: "活動 ID",
-                accessor: 'activity_id',          
-              },    
-              {
-                Header: '活動名稱',
-                accessor: 'activity_name',
-              },
-              {
-                Header: '活動資訊',
-                accessor: 'activity_info',
-              },
-              {
-                Header: '活動票價',
-                accessor: 'price',
-              },
-              
-              {
-                Header: '付款狀態',
-                accessor: 'has_paid',
-                Cell: ({ cell }:CellProps<Event>) => (
-                  <div 
-                  style={{textDecoration:'underline' }}
-                    onClick={async ()=>{
-                      if(cell.row.values.has_paid == 0){
-                        const order = {
-                          ticket_id: encodeURIComponent(cell.row.values.key)
-                        }
-                        await payOrder(order);
-                        var found = tickets.filter(function(item) { return item.key == cell.row.values.key})
-                        var after_tickets = tickets.filter(function(item) { return item.key != cell.row.values.key})
-                        if(found.length != 0){
-                          found[0]['has_paid'] = '1'
-                          after_tickets.push(found[0])
-                        }
-                        after_tickets.reverse()
-            
-                        setTickets(after_tickets)
-                    
-                      
-                      }
-                  }
-                  }>{convertStatus(cell.row.values.has_paid)} {cell.row.values.has_paid == 1? (<></>):(`(按下付款)`)}</div>
-                ),
-              },
-              
-              // {
-              //   Header: '票券張數',
-              //   accessor: 'cnt',
-              //   // Cell: TicketCell(tickets)
-              //   Cell: ({ cell }:CellProps<Event>) => (
-              //     <div style={{ textAlign: "center", color: 'blue', textDecoration:'underline' }}>
-              //        <TicketModal cnt={cell.row.cells[4].value} activity_id={cell.row.cells[0].value} tickets = {tickets.filter(function(item) { return item.activity_id == cell.row.cells[0].value; })}></TicketModal> 
-              //       {/* <p onClick={}>{cell.row.values.cnt}</p> */}
-              //     </div>
-              //   )
-              // },
-            ],
+            Header: '訂單編號',
+            accessor: 'key',
           },
+          {
+            Header: "活動 ID",
+            accessor: 'activity_id',          
+          },    
+          {
+            Header: '活動名稱',
+            accessor: 'activity_name',
+          },
+          {
+            Header: '活動資訊',
+            accessor: 'activity_info',
+          },
+          {
+            Header: '活動票價',
+            accessor: 'price',
+          },
+          
+          {
+            Header: '付款狀態',
+            accessor: 'has_paid',
+            Cell: ({ cell }:CellProps<Event>) => (
+              <div 
+              style={{textDecoration:'underline' }}
+                onClick={async ()=>{
+                  if(cell.row.values.has_paid == 0){
+                    const order = {
+                      ticket_id: encodeURIComponent(cell.row.values.key)
+                    }
+                    await payOrder(order);
+                    var found = tickets.filter(function(item) { return item.key == cell.row.values.key})
+                    var after_tickets = tickets.filter(function(item) { return item.key != cell.row.values.key})
+                    if(found.length != 0){
+                      found[0]['has_paid'] = '1'
+                      after_tickets.push(found[0])
+                    }
+                    // after_tickets.reverse()
+                    setShowTickets(after_tickets)    
+                  }
+              }
+              }>{convertStatus(cell.row.values.has_paid)} {cell.row.values.has_paid == 1? (<></>):(`(按下付款)`)}</div>
+            ),
+          },
+          
+          // {
+          //   Header: '票券張數',
+          //   accessor: 'cnt',
+          //   // Cell: TicketCell(tickets)
+          //   Cell: ({ cell }:CellProps<Event>) => (
+          //     <div style={{ textAlign: "center", color: 'blue', textDecoration:'underline' }}>
+          //        <TicketModal cnt={cell.row.cells[4].value} activity_id={cell.row.cells[0].value} tickets = {tickets.filter(function(item) { return item.activity_id == cell.row.cells[0].value; })}></TicketModal> 
+          //       {/* <p onClick={}>{cell.row.values.cnt}</p> */}
+          //     </div>
+          //   )
+          // },
         ],
-        [tickets]
-      )
+      },
+    ],
+    [tickets]
+  )
   return (
     <React.Fragment>
       <div style={{
@@ -168,7 +161,7 @@ function PricingContent() {
       "padding": "100px",
      }}>
       <TicketsTable 
-       style={{ "padding": "100px"}}
+      style={{ "padding": "100px"}}
       columns={columns} data={ showTickets || []}/>
       </Container>
       </div>
