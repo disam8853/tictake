@@ -26,6 +26,9 @@ router.post('/', async (req, res) => {
   const now = dayjs.tz()
   const email = req.user.email
   const activityId = req.body.activity_id
+  if (!activityId) {
+    return res.status(400).send({ msg: 'must provide activity ID in request body' })
+  }
   const ts = now.utc().format('YYYYMMDDHHmmss')
   const orderId = uuidv4()
   const ticketKey = `${email}#${activityId}#${ts}`
