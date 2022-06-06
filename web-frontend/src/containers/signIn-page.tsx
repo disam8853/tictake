@@ -54,7 +54,7 @@ export default function SignInPpage() {
       email: data.get('email'),
       password: data.get('password'),
     }
-    console.log(user)
+
     await login(user)
   };
 
@@ -145,7 +145,7 @@ export default function SignInPpage() {
                   aria-describedby="modal-modal-description"
                 >
                   <Box sx={style}>
-                    <SignUp></SignUp>
+                    <SignUp handleClose={handleClose}></SignUp>
                   </Box>
                 </Modal>
                

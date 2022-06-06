@@ -52,22 +52,21 @@ export default function createActivityModal(
             end_date: transferTime(data.get('end_date')?.toString() || ''),
             total_inventory: data.get('total_inventory'),
             price:  data.get('price'),
-            user_id: 4
         }
-        console.log(activity)
+
         await createActivity(activity)
       };
      
 
     return (
-    <ThemeProvider theme={theme}>
+
       <Container component="main" maxWidth="xs"
        style={{"backgroundColor": "white",
        }}>
-        <CssBaseline />
+        {/* <CssBaseline /> */}
         <Box
           sx={{
-            marginTop: 20,
+            // marginTop: 20,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -173,7 +172,7 @@ export default function createActivityModal(
 
       </Container>
 
-    </ThemeProvider>
+
     )
 }
     
