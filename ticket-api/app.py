@@ -81,7 +81,8 @@ def add_ticket_by_key():
     data = request.get_json()
     keys = data['key'].split('#')
     if len(keys) == 3 and len(keys[0]) > 0 and len(keys[1]) > 0 and len(keys[2]) == 14:
-        res = bigtable.create_order(keys[0], keys[1], utils.str_to_gmt(keys[2]))
+        res = bigtable.create_order(
+            keys[0], keys[1], utils.str_to_gmt(keys[2]))
         if res != "":
             return res
         else:
@@ -115,6 +116,11 @@ def add_ticket_by_key():
 def update_ticket_order(key):
     try:
         key = unquote(key)
+        # reduce remaining_inventory by activity id
+        # 記得把其他api的url設成一個環境變數，因為在k8s裡面會有自己的網址
+        suc = utils.reduce_remaining_inventory(key.split('#')[1])
+        if suc is False:
+            return Response(status=500)
         if key != "":
             res = bigtable.order_has_paid(key)
             return res
@@ -123,7 +129,7 @@ def update_ticket_order(key):
     except Exception as e:
         print(e)
         return Response(status=500)
-    return Response(status=500)
+    # return Response(status=500)
 
 
 """
@@ -187,6 +193,8 @@ def get_ticket_by_key(key):
             []
 
 """
+
+
 @app.route('/search_ticket/', methods=['GET'])
 def get_ticket_by_query():
     member = request.args.get('member')

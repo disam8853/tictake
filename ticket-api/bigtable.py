@@ -5,7 +5,7 @@ from google.cloud import bigtable
 from google.cloud.bigtable import column_family
 from google.cloud.bigtable import row_filters
 from google.oauth2 import service_account
-import sys
+# import sys
 
 credentials = service_account.Credentials.from_service_account_file(
     'tictake-352113-f099decf2768.json')
