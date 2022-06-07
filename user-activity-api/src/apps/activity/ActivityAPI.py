@@ -105,10 +105,12 @@ def get_activity(activity_id):
 def reduce_by_activity_id(activity_id):
     try:
         activity = Activity.query.filter_by(activity_id=activity_id).first()
-        activity.remaining_inventory = activity.remaining_inventory - 1
-
-        db.session.commit()
-        return Response(status=200)
+        if (activity.remaining_inventory > 0):
+            activity.remaining_inventory = activity.remaining_inventory - 1
+            db.session.commit()
+            return Response(status=200)
+        else:
+            return Response(status=400)
     except Exception as e:
         print(e)
         return Response(status=500)
