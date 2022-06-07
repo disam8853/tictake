@@ -5,13 +5,16 @@ from google.cloud import bigtable
 from google.cloud.bigtable import column_family
 from google.cloud.bigtable import row_filters
 from google.oauth2 import service_account
+from environs import Env
 # import sys
+env = Env()
+env.read_env()
 
 credentials = service_account.Credentials.from_service_account_file(
     'tictake-352113-f099decf2768.json')
-client = bigtable.Client(project="tictake-352113", admin=True,
+client = bigtable.Client(project=env('BIGTABLE_PROJECT_ID'), admin=True,
                          credentials=credentials)
-instance = client.instance("instance-tictake")
+instance = client.instance(env('BIGTABLE_INSTANCE'))
 
 
 def create_table(table_id):
