@@ -20,7 +20,7 @@ const darkTheme = createTheme({
 function App() {
   const [refreshCnt, setRefreshCnt] = React.useState(0)
   React.useEffect( ()=>{
-    console.log('version 1.0')
+    console.log('version 1.1')
   }, [])
   return (
     <Switch>
@@ -33,7 +33,8 @@ function App() {
           <ThemeProvider theme={darkTheme}>
             <div style={{
               "backgroundSize": "cover",
-              "height": "1130px"
+              "height": "1130px",
+              "backgroundImage": "url('view-6.jpg')",
             // "backgroundColor": "rgba(0, 0, 0, .6)"
             // "backgroundImage": "url('view-3.jpg')",
             }}>
@@ -49,7 +50,7 @@ function App() {
             <div style={{
               "backgroundSize": "cover",
               "height": "1130px",
-              // "backgroundImage": "url('view-4.jpeg')",
+              // "backgroundImage": "url('view-6.jpg')",
                // "backgroundColor": "rgba(0, 0, 0, .6)"
             }}>
               <SearchForActivitiesPage/>
@@ -64,7 +65,7 @@ function App() {
               <div style={{
                 "backgroundSize": "cover",
                 "height": "1130px",
-                "backgroundImage": "url('view-1.png')"
+                "backgroundImage": "url('view-10.png')"
               // "backgroundColor": "rgba(0, 0, 0, .6)"
               // "backgroundImage": "url('view-3.jpg')",
               }}>

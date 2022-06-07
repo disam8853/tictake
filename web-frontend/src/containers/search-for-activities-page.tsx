@@ -82,7 +82,7 @@ function SearchForActivitiesContent() {
         <Grid container spacing={5} alignItems="flex-end"
             // style={{"marginTop": "30px"}}
           >
-          {activities.map((activitiy, idx) => activitiy.remaining_inventory==0?(<></>):(
+          {activities.map((activitiy, idx) => 
             
             // Enterprise card is full width at sm breakpoint
             (<Grid
@@ -140,11 +140,14 @@ function SearchForActivitiesContent() {
                    
                 </CardContent>
                 <CardActions>
-                  <BuyTicketModal activity_id={activitiy.activity_id} activity_name={activitiy.activity_name}></BuyTicketModal>                  
+                  <BuyTicketModal 
+                    activity_id={activitiy.activity_id} 
+                    activity_name={activitiy.activity_name}
+                    activity_remaining_inventory={activitiy.remaining_inventory}></BuyTicketModal>                  
                 </CardActions>
               </Card>
             </Grid>)
-          ))}
+          )}
         </Grid>
       </Container>
 
@@ -154,7 +157,7 @@ function SearchForActivitiesContent() {
         maxWidth="md"
         component="footer"
         sx={{
-          borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+          borderTop: (theme) => `3px solid ${theme.palette.divider}`,
           mt: 8,
           py: [3, 6],
         }}

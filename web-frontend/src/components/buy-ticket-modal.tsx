@@ -53,7 +53,7 @@ const style = {
   };
 
 export default function BuyTicketModal(
-    props: { activity_id: string , activity_name: string}
+    props: { activity_id: string , activity_name: string, activity_remaining_inventory: number}
 ) {
     const [actualOrder, SetActualOrder] = React.useState(false);
     const [ticketKey, SetTicketKey] = React.useState(false);
@@ -83,7 +83,8 @@ export default function BuyTicketModal(
     <ThemeProvider theme={darkTheme}>
         <Button fullWidth onClick={handleOpen} 
           variant="contained"
-          style={{"marginBottom": "10px"}}>
+          style={{"marginBottom": "10px"}}
+          disabled={props.activity_remaining_inventory==0 ? (true):(false)}>
           {'BUY !!!'}
         </Button>
         <Modal
@@ -121,6 +122,7 @@ export default function BuyTicketModal(
                   fullWidth
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
+                
                 >
                   馬上付款
                 </Button>
