@@ -34,12 +34,16 @@ function Copyright(props: any) {
 
 function SearchForActivitiesContent() {
   const [activities, setActivities] = React.useState<ActivityType[]>([]);
+  const [refreshCnt, setRefreshCnt] = React.useState(0)
   React.useEffect( () => {
     getAllActivities(setActivities)
   }, []);
 
-  React.useEffect( ()=>{
-  }, [activities])
+  React.useEffect( () => {
+    getAllActivities(setActivities)
+    console.log(refreshCnt)
+  }, [refreshCnt]);
+
 
   return (
     <React.Fragment>
@@ -143,7 +147,9 @@ function SearchForActivitiesContent() {
                   <BuyTicketModal 
                     activity_id={activitiy.activity_id} 
                     activity_name={activitiy.activity_name}
-                    activity_remaining_inventory={activitiy.remaining_inventory}></BuyTicketModal>                  
+                    activity_remaining_inventory={activitiy.remaining_inventory}
+                    refreshCnt={refreshCnt}
+                    setRefreshCnt={setRefreshCnt}></BuyTicketModal>                  
                 </CardActions>
               </Card>
             </Grid>)

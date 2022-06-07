@@ -18,6 +18,7 @@ import Modal from '@mui/material/Modal';
 import LoadingSpin from "react-loading-spin";
 import { createOrder} from '../axios/index'
 import { payOrder} from '../axios/index'
+import { history } from '../index'
 
 function Copyright(props: any) {
   return (
@@ -53,7 +54,9 @@ const style = {
   };
 
 export default function BuyTicketModal(
-    props: { activity_id: string , activity_name: string, activity_remaining_inventory: number}
+    props: { activity_id: string , activity_name: string
+      , activity_remaining_inventory: number
+      ,setRefreshCnt: any, refreshCnt: number}
 ) {
     const [actualOrder, SetActualOrder] = React.useState(false);
     const [ticketKey, SetTicketKey] = React.useState(false);
@@ -66,16 +69,22 @@ export default function BuyTicketModal(
         activity_id: props.activity_id
       }
       await createOrder(activity, SetActualOrder, SetTicketKey)
+      var cnt = props.refreshCnt + 1
+     
+      props.setRefreshCnt(cnt)
+   
     };
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {
+      setOpen(false)
+    };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.stopPropagation()
     const order = {
       ticket_id: encodeURIComponent(ticketKey)
     }
-   
     await payOrder(order, setOpen, SetActualOrder);
+    history.go(0)
 
   };
 

@@ -57,7 +57,7 @@ function MyTicketsPageContent() {
     //    actuall_tickets.push(value);
     // }
     // actuall_tickets.reverse()
-    actuall_tickets.sort((a: TicketType, b:TicketType) => 
+    actuall_tickets.sort((b: TicketType, a:TicketType) => 
       (a.order_timestamp > b.order_timestamp) ? 1 : ((b.order_timestamp > a.order_timestamp) ? -1 : 0))
     setShowTickets(actuall_tickets)
   }, [tickets])
@@ -80,7 +80,7 @@ function MyTicketsPageContent() {
         found[0]['has_paid'] = '1'
         after_tickets.push(found[0])
       }
-      after_tickets.sort((a: TicketType, b:TicketType) => 
+      after_tickets.sort((b: TicketType, a:TicketType) => 
       (a.order_timestamp > b.order_timestamp) ? 1 : ((b.order_timestamp > a.order_timestamp) ? -1 : 0))
       setShowTickets(after_tickets)    
     }
@@ -95,6 +95,10 @@ function MyTicketsPageContent() {
           {
             Header: '訂單編號',
             accessor: 'key',
+          },
+          {
+            Header: '活動票價',
+            accessor: 'order_timestamp',
           },
           {
             Header: "活動 ID",
@@ -146,11 +150,16 @@ function MyTicketsPageContent() {
       <div style={{ "backgroundSize": "cover", "paddingTop": "100px"}}>
         <GlobalStyles styles={{ ul: { margin: 0, padding: 0, listStyle: 'none' } }} />
         <CssBaseline />
-        <Container  style={{ "backgroundColor": "white", "padding": "100px", 
-                              "height": "800px", "borderRadius": "25px", 
-                              "border": "6px solid gray",
-                              "color": "black",
-                          }}>
+        <Container 
+          
+    
+            style={{ "backgroundColor": "white", "padding": "100px", 
+                      "borderRadius": "25px", 
+                      "border": "6px solid gray",
+                      "color": "black",
+                      "display":"flex",
+                      "flexDirection": 'column' as 'column',
+          }}>
           <div style={{  "backgroundColor": "white"}}>
             <TicketsTable style=
             {{ "padding": "100px",  "backgroundColor": "white",

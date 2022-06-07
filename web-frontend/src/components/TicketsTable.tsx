@@ -47,7 +47,7 @@ export default function EventsTable({ columns, data }: TableOptions<TicketType>)
 
   return (
     <>
-      <BTable striped bordered hover size="lg" {...getTableProps({ className: 'table-fit' })}>
+      <BTable striped bordered hover size="sm" {...getTableProps({ className: 'table-fit' })}>
         <thead className="sticky-top" style={{ backgroundColor: 'white' }}>
           {headerGroups.map((headerGroup) => {
             const { key: headerGroupKey, ...getHeaderGroupProps } = headerGroup.getHeaderGroupProps()
