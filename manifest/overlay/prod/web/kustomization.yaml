@@ -5,6 +5,12 @@ resources:
   - hpa.yaml
   - ingressroute.yaml
 
+replicas:
+  - name: tictake-web-backend
+    count: 5
+  - name: tictake-web-frontend
+    count: 2
+
 configMapGenerator:
   - name: web-backend-config
     envs:

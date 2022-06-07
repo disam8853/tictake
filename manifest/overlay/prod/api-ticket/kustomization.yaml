@@ -1,5 +1,10 @@
 resources:
   - ../../../base/api-ticket
+  - hpa.yaml
+
+replicas:
+  - name: tictake-api-ticket
+    count: 5
 
 configMapGenerator:
   - name: api-ticket-config

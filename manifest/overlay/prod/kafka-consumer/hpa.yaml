@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: web-backend
+  name: kafka-consumer
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: tictake-web-backend
-  minReplicas: 5
-  maxReplicas: 50
+    name: kafka-consumer
+  minReplicas: 3
+  maxReplicas: 20
   behavior:
   metrics:
     - type: Resource

@@ -2,12 +2,12 @@
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: web-backend
+  name: tictake-api-ticket
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: tictake-web-backend
+    name: tictake-api-ticket
   minReplicas: 5
   maxReplicas: 50
   behavior:
@@ -23,4 +23,4 @@ spec:
         name: memory
         target:
           type: AverageValue
-          averageValue: 100Mi
+          averageValue: 300Mi

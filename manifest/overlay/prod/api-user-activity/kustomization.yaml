@@ -1,5 +1,10 @@
 resources:
   - ../../../base/api-user-activity
+  - hpa.yaml
+
+replicas:
+  - name: tictake-api-user-activity
+    count: 5
 
 configMapGenerator:
   - name: api-user-activity-config

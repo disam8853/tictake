@@ -1,5 +1,10 @@
 resources:
   - ../../../base/kafka-consumer
+  - hpa.yaml
+
+replicas:
+  - name: kafka-consumer
+    count: 3
 
 configMapGenerator:
   - name: kafka-consumer-config
