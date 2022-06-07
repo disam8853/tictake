@@ -1,4 +1,3 @@
-from crypt import methods
 from models.models import db
 from environs import Env
 from flask import Flask

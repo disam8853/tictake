@@ -1,4 +1,3 @@
-import email
 from flask import Blueprint, jsonify, Response, request, abort
 from models.models import User, db
 
@@ -24,26 +23,27 @@ user_api = Blueprint('UserAPI', __name__)
         error
             status code 500
 """
+
+
 @user_api.route('/login', methods=['POST'])
 def login():
     try:
         email = request.json.get('email')
         password = request.json.get('password')
-        user = User.query.filter_by(email = email).first()
+        user = User.query.filter_by(email=email).first()
         if not user or not user.verify_password(password):
             return Response(status=401)
         else:
             resp = jsonify(
-                user_id = user.user_id,
-                first_name = user.first_name,
-                last_name = user.last_name,
-                email = user.email
+                user_id=user.user_id,
+                first_name=user.first_name,
+                last_name=user.last_name,
+                email=user.email
             )
             return resp
     except Exception as e:
         print(e)
         return Response(status=500)
-
 
 
 """
@@ -61,6 +61,8 @@ def login():
         error
             status code 500
 """
+
+
 @user_api.route('/create', methods=['POST'])
 def create_user():
     first_name = request.json.get('first_name')
@@ -72,15 +74,14 @@ def create_user():
         abort(400)
     else:
         user = User(
-            first_name = first_name,
-            email = email,
+            first_name=first_name,
+            email=email,
         )
         if last_name is None:
             pass
         else:
             user.last_name = last_name
         user.hash_password(password)
-
 
         db.session.add(user)
         db.session.commit()
