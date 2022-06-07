@@ -62,6 +62,8 @@ export default function createActivityModal(
 
       <Container component="main" maxWidth="xs"
        style={{"backgroundColor": "white",
+              "borderRadius": "25px",
+              "border": "1px solid black"
        }}>
         {/* <CssBaseline /> */}
         <Box

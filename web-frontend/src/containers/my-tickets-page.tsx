@@ -2,22 +2,17 @@
 
 import TicketsTable from '../components/TicketsTable';
 import * as React from 'react';
-import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import Container from '@mui/material/Container';
-import SmartToyIcon from '@mui/icons-material/SmartToy';
 import { getAllTicketsByUser } from '../axios';
 import { getAllActivities } from '../axios';
 import { TicketType } from '../Types/ticket';
 import { ActivityType } from '../Types/ticket';
 import type { CellProps } from 'react-table'
-import TicketModal from '../components/ticket-modal.';
-
 import { payOrder } from '../axios';
+
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -28,54 +23,69 @@ function Copyright(props: any) {
   );
 }
 
-
-function PricingContent() {
+function MyTicketsPageContent() {
   const [tickets, setTickets] = React.useState<TicketType[]>([]);
   const [activities, setActivities] = React.useState<ActivityType[]>([]);
   const [showTickets, setShowTickets] = React.useState<TicketType[]>([]);
 
-
   React.useEffect( ()=>{
-    getAllTicketsByUser(setTickets)
     getAllActivities(setActivities)
+    getAllTicketsByUser(setTickets)
   }, [])
 
-
-
-
   React.useEffect( ()=>{
-    let actuall_tickets_map = new Map();
+    // let actuall_tickets_map = new Map();
     let actuall_tickets: TicketType[] = []; 
     tickets.forEach((ticket)=>{
-      var found = activities.filter(function(item) { return item.activity_id == ticket.activity_id; });
-      if(found.length != 0){
+      var activity = activities.filter(function(item) { return item.activity_id == ticket.activity_id; });
+      if(activity.length != 0){
         var actuall_ticket = ticket
- 
-
-        actuall_ticket['activity_info'] = found[0]['activity_info']
-        actuall_ticket['activity_name'] = found[0]['activity_name']
-        actuall_ticket['price'] = found[0]['price']
-
+        actuall_ticket['activity_info'] = activity[0]['activity_info']
+        actuall_ticket['activity_name'] = activity[0]['activity_name']
+        actuall_ticket['price'] = activity[0]['price']
         actuall_tickets.push(actuall_ticket);
+        // 計算張數
         // if(typeof actuall_tickets_map.get(ticket.activity_id) !== 'undefined'){
         //   actuall_ticket['cnt'] = actuall_tickets_map.get(ticket.activity_id)['cnt'] += 1
         // } else {
         //   actuall_ticket['cnt'] = 1
         // }
-        actuall_tickets_map.set(ticket.activity_id, actuall_ticket)
+        // actuall_tickets_map.set(ticket.activity_id, actuall_ticket)
       } 
     })
     // for (const [key, value] of actuall_tickets_map.entries()) {
     //    actuall_tickets.push(value);
     // }
     // actuall_tickets.reverse()
+    actuall_tickets.sort((a: TicketType, b:TicketType) => 
+      (a.order_timestamp > b.order_timestamp) ? 1 : ((b.order_timestamp > a.order_timestamp) ? -1 : 0))
     setShowTickets(actuall_tickets)
   }, [tickets])
+  
+  // 重新整理
+  React.useEffect( ()=>{
+  }, [showTickets])
 
   const convertStatus = (status:number) => {
     if(status == 1) { return '已付款'}
     else{ return '未付款'}
   }
+  const clickToPayOrder = async (ticket: any)=>{
+    if(ticket.has_paid == 0){
+      const order = { ticket_id: encodeURIComponent(ticket.key)}
+      await payOrder(order);
+      var found = tickets.filter(function(item) { return item.key == ticket.key})
+      var after_tickets = tickets.filter(function(item) { return item.key != ticket.key})
+      if(found.length != 0){
+        found[0]['has_paid'] = '1'
+        after_tickets.push(found[0])
+      }
+      after_tickets.sort((a: TicketType, b:TicketType) => 
+      (a.order_timestamp > b.order_timestamp) ? 1 : ((b.order_timestamp > a.order_timestamp) ? -1 : 0))
+      setShowTickets(after_tickets)    
+    }
+  }
+  
    
   const columns = React.useMemo(
     () => [
@@ -102,30 +112,16 @@ function PricingContent() {
             Header: '活動票價',
             accessor: 'price',
           },
-          
           {
             Header: '付款狀態',
             accessor: 'has_paid',
             Cell: ({ cell }:CellProps<Event>) => (
               <div 
-              style={{textDecoration:'underline' }}
-                onClick={async ()=>{
-                  if(cell.row.values.has_paid == 0){
-                    const order = {
-                      ticket_id: encodeURIComponent(cell.row.values.key)
-                    }
-                    await payOrder(order);
-                    var found = tickets.filter(function(item) { return item.key == cell.row.values.key})
-                    var after_tickets = tickets.filter(function(item) { return item.key != cell.row.values.key})
-                    if(found.length != 0){
-                      found[0]['has_paid'] = '1'
-                      after_tickets.push(found[0])
-                    }
-                    // after_tickets.reverse()
-                    setShowTickets(after_tickets)    
-                  }
-              }
-              }>{convertStatus(cell.row.values.has_paid)} {cell.row.values.has_paid == 1? (<></>):(`(按下付款)`)}</div>
+              style={{textDecoration:`${cell.row.values.has_paid == 0? "underline": ""}` }}
+              onClick={ () => {clickToPayOrder(cell.row.values)} }>
+                {convertStatus(cell.row.values.has_paid)} 
+                {cell.row.values.has_paid == 1? (<></>):(`(按下付款)`)}
+              </div>
             ),
           },
           
@@ -147,30 +143,29 @@ function PricingContent() {
   )
   return (
     <React.Fragment>
-      <div style={{
-        // "backgroundImage": "url('view-1.png')",
-        // "backgroundColor": "rgba(0, 0, 0, .6)"
-        "backgroundSize": "cover",
-        "paddingTop": "100px"
-      }}>
-       
-      <GlobalStyles styles={{ ul: { margin: 0, padding: 0, listStyle: 'none' } }} />
-      <CssBaseline />
-      <Container 
-      style={{ "backgroundColor": "white",
-      "padding": "100px",
-     }}>
-      <TicketsTable 
-      style={{ "padding": "100px"}}
-      columns={columns} data={ showTickets || []}/>
-      </Container>
+      <div style={{ "backgroundSize": "cover", "paddingTop": "100px"}}>
+        <GlobalStyles styles={{ ul: { margin: 0, padding: 0, listStyle: 'none' } }} />
+        <CssBaseline />
+        <Container  style={{ "backgroundColor": "white", "padding": "100px", 
+                              "height": "800px", "borderRadius": "25px", 
+                              "border": "6px solid gray",
+                              "color": "black",
+                          }}>
+          <div style={{  "backgroundColor": "white"}}>
+            <TicketsTable style=
+            {{ "padding": "100px",  "backgroundColor": "white",
+                "border": "8px solid gray"}} 
+              columns={columns} data={ showTickets || []}/>
+          </div>
+        </Container>
       </div>
     </React.Fragment>
   );
 }
 
 export default function SearchForActivitiesPage() {
-  return <PricingContent 
-  
-  />;
+  return (<div>
+    <MyTicketsPageContent/>
+    <Copyright sx={{ mt: 5 }} />
+  </div>);
 }

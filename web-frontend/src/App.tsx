@@ -48,13 +48,14 @@ function App() {
           <ThemeProvider theme={darkTheme}>
             <div style={{
               "backgroundSize": "cover",
-              "height": "1130px"
-            // "backgroundColor": "rgba(0, 0, 0, .6)"
-            // "backgroundImage": "url('view-3.jpg')",
+              "height": "1130px",
+              "backgroundImage": "url('view-4.jpeg')",
+               // "backgroundColor": "rgba(0, 0, 0, .6)"
             }}>
               <SearchForActivitiesPage/>
             </div>
-          </ThemeProvider>}
+          </ThemeProvider>
+          }
         </BasicLayout>
       </Route>
 

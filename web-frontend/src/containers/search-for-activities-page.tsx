@@ -82,9 +82,10 @@ function SearchForActivitiesContent() {
         <Grid container spacing={5} alignItems="flex-end"
             // style={{"marginTop": "30px"}}
           >
-          {activities.map((activitiy, idx) => (
+          {activities.map((activitiy, idx) => activitiy.remaining_inventory==0?(<></>):(
+            
             // Enterprise card is full width at sm breakpoint
-            <Grid
+            (<Grid
             style={{"height": "400px"}}
               item
               key={idx}
@@ -129,8 +130,11 @@ function SearchForActivitiesContent() {
                   </Box>
                   <ul style={{"textAlign": "center"}}>
                     <li>活動資訊：{activitiy.activity_info}</li>
+                    <li>剩餘名額：{`${activitiy.remaining_inventory} / ${activitiy.total_inventory}`}</li>
+
                     {/* <li>創立時間：{activitiy.created_time.toString}</li> */}
                   </ul>
+
                   
 
                    
@@ -139,7 +143,7 @@ function SearchForActivitiesContent() {
                   <BuyTicketModal activity_id={activitiy.activity_id} activity_name={activitiy.activity_name}></BuyTicketModal>                  
                 </CardActions>
               </Card>
-            </Grid>
+            </Grid>)
           ))}
         </Grid>
       </Container>

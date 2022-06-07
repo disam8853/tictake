@@ -133,12 +133,7 @@ export const getAllActivities = async (setActivities?:any)=>{
     const instance = axios.create()
     const url =  '/api/activities'
     await instance.get<ActivityType[]>(url).then(({ data }) => {  
-        if(setActivities){
-            data.reverse()
-            setActivities(data)
-
-        }
-       
+        if(setActivities){ setActivities(data)}
         return data
     }).catch((err) => { 
         console.log(err)
@@ -148,11 +143,7 @@ export const getAllTicketsByUser = async (setTickets?:any)  => {
     const instance = axios.create()
     const url =  '/api/tickets'
     await instance.get<TicketType[]>(url).then(({ data }) => {  
-       
-        if(setTickets){
-            data.reverse()
-            setTickets(data)
-        }
+        if(setTickets){ setTickets(data)}
         return data
     }).catch((err) => { 
         console.log(err)

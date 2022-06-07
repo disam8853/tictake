@@ -27,8 +27,6 @@ function PricingContent() {
     <React.Fragment>
     <div style={{ "paddingTop": "100px"}}>
       <CreateActivityModal/>
-      <Container maxWidth="md" component="main">
-      </Container>
       {/* Footer */}
       <Container
         // style={{"marginTop": "130px"}}
