@@ -13,5 +13,5 @@ ENV FLASK_APP=src/app.py
 ENV FLASK_RUN_HOST=0.0.0.0
 
 EXPOSE 5000
-CMD ["gunicorn", "-b", "0.0.0.0:8000", "app"]
+CMD ["gunicorn", "-b", "0.0.0.0:8000", "src/app"]
 # CMD ["flask", "run"]
