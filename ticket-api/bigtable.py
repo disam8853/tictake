@@ -14,7 +14,7 @@ credentials = service_account.Credentials.from_service_account_file(
     'tictake-352113-f099decf2768.json')
 client = bigtable.Client(project=env('BIGTABLE_PROJECT_ID'), admin=True,
                          credentials=credentials)
-instance = client.instance("instance-tictake")
+instance = client.instance(env('BIGTABLE_INSTANCE'))
 
 
 def create_table(table_id):
