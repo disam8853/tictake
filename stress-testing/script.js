@@ -27,9 +27,10 @@ export default function () {
     "has cookie 'access_token'": (r) => r.cookies.access_token && r.cookies.access_token.length > 0,
   })
 
-  http.get(`${BASE_URL}/api/tickets`)
-
   http.post(`${BASE_URL}/api/orders`, JSON.stringify({ activity_id: ACTIVITY_ID }), param)
+  check(res, {
+    'response code was 200': (res) => res.status == 200,
+  })
 
   sleep(1)
 }

@@ -4,7 +4,7 @@ resources:
 
 replicas:
   - name: kafka-consumer
-    count: 3
+    count: 1
 
 configMapGenerator:
   - name: kafka-consumer-config

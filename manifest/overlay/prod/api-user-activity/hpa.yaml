@@ -11,16 +11,26 @@ spec:
   minReplicas: 5
   maxReplicas: 50
   behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 3
+        - type: Pods
+          value: 4
+          periodSeconds: 3
+      selectPolicy: Max
   metrics:
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 50
+          averageUtilization: 30
     - type: Resource
       resource:
         name: memory
         target:
           type: AverageValue
-          averageValue: 300Mi
+          averageValue: 200Mi

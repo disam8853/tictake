@@ -7,9 +7,9 @@ resources:
 
 replicas:
   - name: tictake-web-backend
-    count: 5
+    count: 1
   - name: tictake-web-frontend
-    count: 2
+    count: 1
 
 configMapGenerator:
   - name: web-backend-config

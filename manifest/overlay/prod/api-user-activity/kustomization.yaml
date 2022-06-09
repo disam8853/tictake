@@ -4,7 +4,7 @@ resources:
 
 replicas:
   - name: tictake-api-user-activity
-    count: 5
+    count: 1
 
 configMapGenerator:
   - name: api-user-activity-config

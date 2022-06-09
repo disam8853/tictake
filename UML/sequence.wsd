@@ -1,0 +1,21 @@
+@startuml tictake
+actor   Client      as cli
+entity  "web-backend" as wb
+database  redis
+queue Kafka as kaf
+entity consumer
+entity "Tickets API" as tic
+database "BigTable" as bt
+
+cli -> wb: create order
+wb -> wb: generate order ID and ticket ID
+wb -> redis: save (order ID, ticket ID) to redis
+wb -> kaf: push (order ID, ticket ID) to Kafka
+wb --> cli: order ID
+kaf -> consumer: (order ID, ticket ID)
+consumer -> tic: create ticket with ticket ID
+tic -> bt++: save to BigTable
+return ok
+
+
+@enduml
